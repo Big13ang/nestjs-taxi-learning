@@ -8,6 +8,7 @@ const here = document.body.dataset.page || "index";
 const PAGES = [
   { id: "index", file: "index.html", title: { en: "Home — all notes", fa: "خانه — همه یادداشت‌ها" } },
   { id: "decorators", file: "notes/decorators.html", title: { en: "Decorators", fa: "Decoratorها" } },
+  { id: "di", file: "notes/dependency-injection.html", title: { en: "Dependency injection and modules", fa: "تزریق وابستگی و Moduleها" } },
   { id: "guards", file: "notes/sample-guards.html", title: { en: "Guards (sample)", fa: "Guardها (نمونه)" } },
 ];
 
@@ -27,6 +28,14 @@ const SECTIONS = {
     { a: "examples", en: "Examples to memorize", fa: "مثال‌هایی برای حفظ کردن" },
     { a: "training", en: "Train on these", fa: "با این‌ها تمرین کن" },
     { a: "nest", en: "Where this lands in Nest", fa: "این کجای Nest استفاده می‌شود" },
+    { a: "review", en: "Review questions", fa: "سوال‌های مرور" },
+  ],
+  di: [
+    { a: "idea", en: "The idea, in one picture", fa: "ایده، در یک تصویر" },
+    { a: "recipe", en: "Same module: three moves", fa: "همان Module: سه حرکت" },
+    { a: "other-modules", en: "Another module: three more moves", fa: "Module دیگر: سه حرکت دیگر" },
+    { a: "errors", en: "The one error, translated", fa: "آن یک خطا، ترجمه‌شده" },
+    { a: "training", en: "Train on these", fa: "با این‌ها تمرین کن" },
     { a: "review", en: "Review questions", fa: "سوال‌های مرور" },
   ],
   guards: [
