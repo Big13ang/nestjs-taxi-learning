@@ -127,3 +127,34 @@ main{max-width:980px;width:100%;margin:0 auto;padding:32px 20px 80px}
   padding:7px 14px;font:inherit;font-size:.92rem;cursor:pointer;text-decoration:none;white-space:nowrap}
 .btn:hover{border-color:var(--accent)}
 section{scroll-margin-top:16px}
+
+/* ============================================================
+   Focus pass — following the frontend-design skill (Dave, 2026-11-08):
+   one focal point per page, prose under 80ch, quiet labels in
+   sentence case, boldness spent only on the page's one rule
+   and on decorator tokens in code.
+   ============================================================ */
+main{max-width:860px}
+main p, main li, .callout, .example, .quiz, .sub{max-width:68ch}
+h1{font-size:2.3rem;letter-spacing:-.02em}
+h2{margin-top:56px}
+.kicker{text-transform:none;letter-spacing:0;font-size:.92rem;font-weight:600}
+.callout b, .example b.t{text-transform:none;letter-spacing:0;font-size:.88rem}
+.toc h4{text-transform:none;letter-spacing:0;font-size:.85rem;font-weight:600}
+.toc a.sec[aria-current="true"]{color:var(--ink);border-inline-start:3px solid var(--accent);background:var(--surface-2)}
+/* The one rule of the page — the single bold element */
+.focus{margin:26px 0 6px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:26px 28px}
+.focus .focus-label{color:var(--muted);font-size:.9rem;margin:0 0 8px}
+.focus p.rule{font-size:1.42rem;line-height:1.5;font-weight:650;margin:0;max-width:34ch}
+html[lang="fa"] .focus p.rule{max-width:44ch}
+#read-progress{position:fixed;top:0;inset-inline-start:0;height:3px;background:var(--accent);width:0;z-index:30}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+@media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto} *{transition:none !important} }
+/* Code highlighting tokens (palette derived from the handbook tokens) */
+.tok-d{color:var(--warning);font-weight:600}
+.tok-k{color:#7FB3F0}
+.tok-s{color:#A9C98B}
+.tok-c{color:#7E7D74;font-style:italic}
+.tok-t{color:#F0A488}
+.tok-n{color:#D8A7CA}
+.tok-f{color:#E8C07D}

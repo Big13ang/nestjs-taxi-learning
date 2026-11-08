@@ -17,12 +17,17 @@
       <div>
         <a class="back" href="../index.html"><span data-l="en">← All notes</span><span data-l="fa">→ همه یادداشت‌ها</span></a>
         <div class="kicker" style="margin-top:14px"><span data-l="en">Session 1 · Sun 8 Nov · 18:04–22:30</span><span data-l="fa">جلسه ۱ · یکشنبه ۸ نوامبر · ۱۸:۰۴ تا ۲۲:۳۰</span></div>
-        <h1><span data-l="en">Decorators: code that runs when a class is <i>defined</i></span><span data-l="fa">Decoratorها: کدی که هنگام <i>تعریف</i> Class اجرا می‌شود</span></h1>
+        <h1><span data-l="en">Decorators: code that runs when a class is defined</span><span data-l="fa">Decoratorها: کدی که هنگام تعریف Class اجرا می‌شود</span></h1>
         <p class="sub"><span data-l="en">A decorator is just a <b>function</b> that receives the thing it sits on — a class, a method, a property, or a parameter — and can observe it, change it, or leave metadata on it. It runs <b>once, at definition time</b>, not when you use the thing.</span><span data-l="fa">Decorator در اصل فقط یک <b>Function</b> است که چیزی را که رویش نشسته دریافت می‌کند — یک Class، یک Method، یک Property یا یک Parameter — و می‌تواند آن را ببیند، تغییرش بدهد یا رویش Metadata بگذارد. فقط <b>یک بار، در زمان تعریف (Definition Time)</b> اجرا می‌شود، نه وقتی از آن چیز استفاده می‌کنی.</span></p>
-        <p class="meta"><span data-l="en">CORE CONCEPT · Ch 1 · TypeScript + Nest · 12 min read</span><span data-l="fa">مفهوم اصلی · فصل ۱ · TypeScript + Nest · ۱۲ دقیقه مطالعه</span></p>
+        <p class="meta"><span data-l="en">Chapter 1, TypeScript and Nest, a 12 minute read</span><span data-l="fa">فصل ۱، TypeScript و Nest، ۱۲ دقیقه مطالعه</span></p>
       </div>
       <button class="btn" type="button" id="lang-toggle">فارسی</button>
     </header>
+
+    <div class="focus">
+      <p class="focus-label"><span data-l="en">The one rule of this page</span><span data-l="fa">قانون اصلی این صفحه</span></p>
+      <p class="rule"><span data-l="en">A decorator runs once, when the class definition is evaluated. Not on <code>new</code>, not per request.</span><span data-l="fa">Decorator فقط یک بار اجرا می‌شود، وقتی تعریف Class ارزیابی می‌شود. نه با <code>new</code>، نه برای هر Request.</span></p>
+    </div>
 
     <section id="core">
       <h2><span data-l="en">Your note, corrected and sharpened</span><span data-l="fa">یادداشت تو، اصلاح و دقیق‌شده</span></h2>
@@ -31,7 +36,7 @@ class Feed {}
 
 const f = new Feed();   // ← Logger does NOT run here</code></pre>
       <p><span data-l="en">Two small fixes to the raw note: it's <code>class Feed {}</code> — no <code>()</code> after the name — and "runs when you start your project" is true <i>because</i> that's when the file is first imported and the class definition is evaluated. The precise rule is:</span><span data-l="fa">دو اصلاح کوچک در یادداشت خام: شکل درست <code>class Feed {}</code> است — بعد از اسم Class پرانتز نمی‌آید — و «وقتی پروژه را اجرا می‌کنی اجرا می‌شود» از این جهت درست است که در همان لحظه فایل برای اولین بار Import می‌شود و تعریف Class ارزیابی (Evaluate) می‌شود. قانون دقیق این است:</span></p>
-      <div class="callout key"><b><span data-l="en">Key idea</span><span data-l="fa">ایده کلیدی</span></b><span data-l="en">A decorator runs <b>once, when the class definition is evaluated</b> (module load / app startup in Nest). It does <b>not</b> run on <code>new Feed()</code>, and it does <b>not</b> run per request.</span><span data-l="fa">Decorator <b>فقط یک بار، وقتی تعریف Class ارزیابی می‌شود</b> اجرا می‌شود (در Nest یعنی زمان Load شدن Module / بالا آمدن برنامه). با <code>new Feed()</code> اجرا <b>نمی‌شود</b> و برای هر Request هم اجرا <b>نمی‌شود</b>.</span></div>
+      <p><span data-l="en">In Nest, "definition time" means module load — app startup. That is the moment the rule above refers to.</span><span data-l="fa">در Nest «زمان تعریف» یعنی زمان Load شدن Module — همان بالا آمدن برنامه. قانون بالا دقیقاً به همین لحظه اشاره می‌کند.</span></p>
       <div class="callout link"><b><span data-l="en">The split that explains Nest</span><span data-l="fa">تفکیکی که Nest را توضیح می‌دهد</span></b><span data-l="en">The decorator <i>function</i> runs at definition time. What it leaves behind is what acts later: most Nest decorators only <b>store metadata</b> (<code>Reflect.defineMetadata</code>) — e.g. <code>@Get(':id')</code> writes "this method = GET /:id". Nest reads that metadata at startup and at runtime. Definition-time execution, runtime effect.</span><span data-l="fa">خودِ <i>Function</i> دکوراتور در زمان تعریف اجرا می‌شود. چیزی که از خودش به جا می‌گذارد بعداً عمل می‌کند: بیشتر Decoratorهای Nest فقط <b>Metadata ذخیره می‌کنند</b> (<code>Reflect.defineMetadata</code>) — مثلاً <code>@Get(':id')</code> می‌نویسد «این Method یعنی GET /:id». Nest این Metadata را هنگام Startup و Runtime می‌خواند. اجرا در زمان تعریف، اثر در زمان اجرا.</span></div>
     </section>
 

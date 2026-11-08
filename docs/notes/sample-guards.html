@@ -24,10 +24,15 @@
       <button class="btn" type="button" id="lang-toggle">فارسی</button>
     </header>
 
+    <div class="focus">
+      <p class="focus-label"><span data-l="en">The one rule of this page</span><span data-l="fa">قانون اصلی این صفحه</span></p>
+      <p class="rule"><span data-l="en">Guards run after middleware and before the controller, and they can read the route's metadata.</span><span data-l="fa">Guardها بعد از Middleware و قبل از Controller اجرا می‌شوند و می‌توانند Metadata آن Route را بخوانند.</span></p>
+    </div>
+
     <section id="model">
       <h2><span data-l="en">Mental model</span><span data-l="fa">مدل ذهنی</span></h2>
       <p><span data-l="en">Think of a club. The <b>middleware</b> is the street camera — it sees everyone passing. The <b>Guard</b> is the bouncer at the door — it checks your ID and decides. The <b>controller</b> is the party inside — it only meets people who got in.</span><span data-l="fa">یک کلاب را تصور کن. <b>Middleware</b> دوربین خیابان است — همه رهگذرها را می‌بیند. <b>Guard</b> نگهبان دم در است — کارت شناسایی‌ات را چک می‌کند و تصمیم می‌گیرد. <b>Controller</b> مهمانی داخل است — فقط کسانی را می‌بیند که وارد شده‌اند.</span></p>
-      <div class="callout key"><b><span data-l="en">Key idea</span><span data-l="fa">ایده کلیدی</span></b><span data-l="en">Guards run <i>after</i> middleware and <i>before</i> interceptors, pipes and the controller. They have access to the route's metadata — so they can behave differently per route.</span><span data-l="fa">Guardها <i>بعد از</i> Middleware و <i>قبل از</i> Interceptorها، Pipeها و Controller اجرا می‌شوند. به Metadata آن Route دسترسی دارند — پس می‌توانند برای هر Route رفتار متفاوتی داشته باشند.</span></div>
+      <p><span data-l="en">Because a Guard can read the route's metadata, it can behave differently per route — that is the whole point of its position in the chain.</span><span data-l="fa">چون Guard می‌تواند Metadata آن Route را بخواند، می‌تواند برای هر Route رفتار متفاوتی داشته باشد — و تمام ارزش جایگاهش در این زنجیره همین است.</span></p>
     </section>
 
     <section id="example">

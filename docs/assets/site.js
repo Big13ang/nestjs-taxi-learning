@@ -96,3 +96,62 @@ renderToc();
 document.getElementById("lang-toggle")?.addEventListener("click", () => {
   applyLang(document.documentElement.lang === "fa" ? "en" : "fa");
 });
+
+/* ---- Reading progress: one thin accent line at the top ---- */
+const progressBar = el("div", { id: "read-progress" });
+document.body.prepend(progressBar);
+addEventListener("scroll", () => {
+  const max = document.documentElement.scrollHeight - innerHeight;
+  progressBar.style.width = (max > 0 ? (scrollY / max) * 100 : 0) + "%";
+}, { passive: true });
+
+/* ---- Scrollspy: the sidebar marks the section you are reading ---- */
+const secLinks = new Map();
+for (const link of document.querySelectorAll(".toc a.sec")) {
+  secLinks.set(link.getAttribute("href").slice(1), link);
+}
+if (secLinks.size) {
+  const spy = new IntersectionObserver((entries) => {
+    for (const entry of entries) {
+      if (!entry.isIntersecting) continue;
+      for (const link of secLinks.values()) link.removeAttribute("aria-current");
+      secLinks.get(entry.target.id)?.setAttribute("aria-current", "true");
+    }
+  }, { rootMargin: "-15% 0px -70% 0px" });
+  for (const id of secLinks.keys()) {
+    const section = document.getElementById(id);
+    if (section) spy.observe(section);
+  }
+}
+
+/* ---- TypeScript syntax highlighting for every code block ----
+   Decorators get the one bold color (amber): they are the subject. */
+const KEYWORDS = new Set(("const let var function return class extends implements new if else for of in await async import from export default public private protected readonly static get set this throw typeof instanceof true false null undefined void interface type enum namespace abstract is as satisfies").split(" "));
+const PRIMITIVES = new Set(["string", "number", "boolean", "any", "object", "unknown", "never"]);
+const TOKEN_RE = /(\/\/[^\n]*|\/\*[\s\S]*?\*\/)|('(?:\\.|[^'\\\n])*'|"(?:\\.|[^"\\\n])*"|`(?:\\.|[^`\\])*`)|(@\w+)|(\b\d+(?:\.\d+)?\b)|\b[A-Za-z_$][\w$]*\b/g;
+function escapeHtml(s) {
+  return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+function highlightTs(code) {
+  let out = "", last = 0, m;
+  TOKEN_RE.lastIndex = 0;
+  while ((m = TOKEN_RE.exec(code))) {
+    out += escapeHtml(code.slice(last, m.index));
+    const [tok, comment, str, decorator, num] = [m[0], m[1], m[2], m[3], m[4]];
+    let cls = null;
+    if (comment) cls = "tok-c";
+    else if (str) cls = "tok-s";
+    else if (decorator) cls = "tok-d";
+    else if (num) cls = "tok-n";
+    else if (KEYWORDS.has(tok)) cls = "tok-k";
+    else if (PRIMITIVES.has(tok)) cls = "tok-t";
+    else if (/^[A-Z]/.test(tok)) cls = "tok-t";
+    else if (/^\s*\(/.test(code.slice(TOKEN_RE.lastIndex, TOKEN_RE.lastIndex + 2))) cls = "tok-f";
+    out += cls ? `<span class="${cls}">${escapeHtml(tok)}</span>` : escapeHtml(tok);
+    last = TOKEN_RE.lastIndex;
+  }
+  return out + escapeHtml(code.slice(last));
+}
+for (const block of document.querySelectorAll("pre code")) {
+  block.innerHTML = highlightTs(block.textContent);
+}
