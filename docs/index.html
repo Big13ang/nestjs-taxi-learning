@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -7,55 +7,67 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Vazirmatn:wght@400;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/style.css">
+<script>try{var l=localStorage.getItem("nestjs-notes-lang");if(l==="fa"){document.documentElement.lang="fa";document.documentElement.dir="rtl";}}catch(e){}</script>
 </head>
-<body>
-<header class="top"><div class="top-in"><div class="logo">N</div><b>NestJS Notes</b><span>9 Nov – 6 Dec 2026</span></div></header>
+<body data-root="./" data-page="index">
+<div class="book">
+  <nav class="toc" aria-label="Book contents"></nav>
+  <main>
+    <header class="page-head">
+      <div>
+        <div class="kicker"><span data-l="en">Codehalic · NestJS Intermediate</span><span data-l="fa">کدهالیک · NestJS متوسط</span></div>
+        <h1><span data-l="en">My notes, decorated for review.</span><span data-l="fa">یادداشت‌های من، مرتب‌شده برای مرور.</span></h1>
+        <p class="sub"><span data-l="en">I send raw notes → Muse turns them into clean pages like these → I review here, with a simple example for every concept. One page per topic, nothing extra.</span><span data-l="fa">من یادداشت خام می‌فرستم ← Muse آن‌ها را به صفحه‌های تمیزی مثل این تبدیل می‌کند ← من اینجا مرورشان می‌کنم، برای هر Concept یک مثال ساده. هر موضوع یک صفحه، بدون اضافه‌کاری.</span></p>
+        <p class="meta"><span data-l="en">9 Nov – 6 Dec 2026 · 74 videos · 25.25h · Every day 21:00–00:00 · Thu + Fri double 11:00–20:00</span><span data-l="fa">۹ نوامبر تا ۶ دسامبر ۲۰۲۶ · ۷۴ ویدیو · ۲۵٫۲۵ ساعت · هر روز ۲۱:۰۰ تا ۰۰:۰۰ · پنجشنبه و جمعه دوبرابر ۱۱:۰۰ تا ۲۰:۰۰</span></p>
+      </div>
+      <button class="btn" type="button" id="lang-toggle">فارسی</button>
+    </header>
 
-<main class="wrap">
-  <section class="hero">
-    <div class="kicker">Codehalic · NestJS Intermediate</div>
-    <h1>My notes, decorated for review.</h1>
-    <p class="lede">I send raw notes → Muse turns them into clean pages like these → I review here, with a simple example for every concept. One page per topic, nothing extra.</p>
-    <div class="meta"><span class="chip red">74 videos · 25.25h</span><span class="chip">Every day 21:00–00:00</span><span class="chip">Thu + Fri double · 11:00–20:00</span><span class="chip">Sunday = review</span></div>
-    <div class="progress"><i style="width:0%"></i></div>
-    <small>Progress: Session 1 started early — Sun 8 Nov, 18:04–22:30 · Decorators</small>
-  </section>
+    <div class="progress"><i style="width:3%"></i></div>
+    <small><span data-l="en">Progress: Session 1 started early — Sun 8 Nov, 18:04–22:30 · Decorators</span><span data-l="fa">پیشرفت: جلسه ۱ زودتر شروع شد — یکشنبه ۸ نوامبر، ۱۸:۰۴ تا ۲۲:۳۰ · Decoratorها</span></small>
 
-  <h2>Notes</h2>
-  <div class="grid">
-    <a class="card" href="notes/decorators.html">
-      <b>Decorators: code that runs when a class is defined</b>
-      <p>All 5 decorator kinds and what each receives, decorator factories, and why multiple decorators run bottom-up — with predict-the-output drills to train on.</p>
-      <div class="row"><span class="chip red">SESSION 1</span><span class="chip">Ch 1 · Decorators</span><span class="chip">8 Nov · 18:04–22:30</span></div>
-    </a>
-    <a class="card" href="notes/sample-guards.html">
-      <b>Sample — Guards: the bouncer of your API</b>
-      <p>This is a <b>format sample</b> so you can see exactly how your real notes will look: concept, mental model, a tiny example, a common mistake, and review questions.</p>
-      <div class="row"><span class="chip red">SAMPLE</span><span class="chip">Ch 1 · Lessons 12–13</span><span class="chip">5 min read</span></div>
-    </a>
-    <!-- New notes are added here as Dave sends them. Each note = one card + one page in notes/. -->
-  </div>
+    <section id="notes">
+      <h2><span data-l="en">Notes</span><span data-l="fa">یادداشت‌ها</span></h2>
+      <div class="grid">
+        <a class="card" href="notes/decorators.html">
+          <b><span data-l="en">Decorators: code that runs when a class is defined</span><span data-l="fa">Decoratorها: کدی که هنگام تعریف Class اجرا می‌شود</span></b>
+          <p><span data-l="en">All 5 decorator kinds and what each receives, decorator factories, and why multiple decorators run bottom-up — with predict-the-output drills to train on.</span><span data-l="fa">هر ۵ نوع Decorator و اینکه هر کدام چه چیزی دریافت می‌کند، Factory Decorator، و اینکه چرا چند Decorator از پایین به بالا اجرا می‌شوند — همراه با تمرین‌های «خروجی را حدس بزن».</span></p>
+          <div class="row"><span class="chip red"><span data-l="en">SESSION 1</span><span data-l="fa">جلسه ۱</span></span><span class="chip"><span data-l="en">Ch 1 · Decorators</span><span data-l="fa">فصل ۱ · Decoratorها</span></span><span class="chip">8 Nov · 18:04–22:30</span></div>
+        </a>
+        <a class="card" href="notes/sample-guards.html">
+          <b><span data-l="en">Sample — Guards: the bouncer of your API</span><span data-l="fa">نمونه — Guardها: نگهبان درِ API تو</span></b>
+          <p><span data-l="en">This is a format sample so you can see exactly how your real notes will look: concept, mental model, a tiny example, a common mistake, and review questions.</span><span data-l="fa">این یک نمونه قالب است تا دقیقاً ببینی یادداشت‌های واقعی‌ات چطور خواهند بود: Concept، مدل ذهنی، یک مثال کوچک، یک اشتباه رایج و سوال‌های مرور.</span></p>
+          <div class="row"><span class="chip red"><span data-l="en">SAMPLE</span><span data-l="fa">نمونه</span></span><span class="chip"><span data-l="en">Ch 1 · Lessons 12–13</span><span data-l="fa">فصل ۱ · درس ۱۲ و ۱۳</span></span><span class="chip"><span data-l="en">5 min read</span><span data-l="fa">۵ دقیقه مطالعه</span></span></div>
+        </a>
+        <!-- New notes are added here as Dave sends them. Each note = one card + one page in notes/. -->
+      </div>
+    </section>
 
-  <h2>How this works</h2>
-  <ol>
-    <li><b>Learn</b> — watch that day's lessons (calendar has them).</li>
-    <li><b>Send notes</b> — raw, messy, Persian or English, voice or text. No formatting needed.</li>
-    <li><b>Review here</b> — Muse rebuilds them into a page in this design, adds one simple example per concept, and links it above.</li>
-    <li><b>Sunday</b> — re-read the week's pages, answer the review questions at the bottom of each.</li>
-  </ol>
+    <section id="how">
+      <h2><span data-l="en">How this works</span><span data-l="fa">این سیستم چطور کار می‌کند</span></h2>
+      <ol>
+        <li><span data-l="en"><b>Learn</b> — watch that day's lessons (calendar has them).</span><span data-l="fa"><b>یاد بگیر</b> — درس‌های آن روز را ببین (در تقویم هستند).</span></li>
+        <li><span data-l="en"><b>Send notes</b> — raw, messy, Persian or English, voice or text. No formatting needed.</span><span data-l="fa"><b>یادداشت بفرست</b> — خام و نامرتب، فارسی یا انگلیسی، صوتی یا متنی. نیازی به قالب‌بندی نیست.</span></li>
+        <li><span data-l="en"><b>Review here</b> — Muse rebuilds them into a page in this design, adds one simple example per concept, and links it above.</span><span data-l="fa"><b>اینجا مرور کن</b> — Muse آن‌ها را با همین طراحی به یک صفحه تبدیل می‌کند، برای هر Concept یک مثال ساده اضافه می‌کند و بالایش لینک می‌گذارد.</span></li>
+        <li><span data-l="en"><b>Sunday</b> — re-read the week's pages, answer the review questions at the bottom of each.</span><span data-l="fa"><b>یکشنبه</b> — صفحه‌های هفته را دوباره بخوان و به سوال‌های مرور پایین هر کدام جواب بده.</span></li>
+      </ol>
+      <div class="callout key"><b><span data-l="en">Rule</span><span data-l="fa">قانون</span></b><span data-l="en">If you can't explain it from the review page without the video, you didn't learn it yet. Rebuild beats rewatch.</span><span data-l="fa">اگر نمی‌توانی مطلبی را فقط از روی صفحه مرور و بدون ویدیو توضیح بدهی، هنوز یادش نگرفته‌ای. از نو ساختن، از دوباره دیدن بهتر است.</span></div>
+    </section>
 
-  <div class="callout key"><b>Rule</b>If you can't explain it from the review page without the video, you didn't learn it yet. Rebuild beats rewatch.</div>
+    <section id="month">
+      <h2><span data-l="en">The month at a glance</span><span data-l="fa">این ماه در یک نگاه</span></h2>
+      <table>
+        <tr><th><span data-l="en">Week</span><span data-l="fa">هفته</span></th><th><span data-l="en">Focus</span><span data-l="fa">تمرکز</span></th><th><span data-l="en">Review</span><span data-l="fa">مرور</span></th></tr>
+        <tr><td><span data-l="en">1 · 9–15 Nov</span><span data-l="fa">۱ · ۹ تا ۱۵ نوامبر</span></td><td><span data-l="en">Ch 1 Foundations — modules, providers, guards, interceptors</span><span data-l="fa">فصل ۱ مبانی — Moduleها، Providerها، Guardها، Interceptorها</span></td><td><span data-l="en">Sun 15 Nov</span><span data-l="fa">یکشنبه ۱۵ نوامبر</span></td></tr>
+        <tr><td><span data-l="en">2 · 16–22 Nov</span><span data-l="fa">۲ · ۱۶ تا ۲۲ نوامبر</span></td><td><span data-l="en">Ch 2 Advanced + Ch 3 Config, TypeORM, Caching</span><span data-l="fa">فصل ۲ پیشرفته + فصل ۳: Config، TypeORM، Caching</span></td><td><span data-l="en">Sun 22 Nov</span><span data-l="fa">یکشنبه ۲۲ نوامبر</span></td></tr>
+        <tr><td><span data-l="en">3 · 23–29 Nov</span><span data-l="fa">۳ · ۲۳ تا ۲۹ نوامبر</span></td><td><span data-l="en">Ch 3 Queue, Logger, Multer + Ch 4 Taxi kickoff</span><span data-l="fa">فصل ۳: Queue، Logger، Multer + شروع پروژه تاکسی فصل ۴</span></td><td><span data-l="en">Sun 29 Nov</span><span data-l="fa">یکشنبه ۲۹ نوامبر</span></td></tr>
+        <tr><td><span data-l="en">4 · 30 Nov–6 Dec</span><span data-l="fa">۴ · ۳۰ نوامبر تا ۶ دسامبر</span></td><td><span data-l="en">Ch 4 Taxi — OTP, microservices, trips, WebSocket, fare</span><span data-l="fa">فصل ۴ تاکسی — OTP، Microserviceها، سفرها، WebSocket، کرایه</span></td><td><span data-l="en">Sun 6 Dec · v1.0</span><span data-l="fa">یکشنبه ۶ دسامبر · نسخه ۱٫۰</span></td></tr>
+      </table>
+    </section>
 
-  <h2>The month at a glance</h2>
-  <table>
-    <tr><th>Week</th><th>Focus</th><th>Review</th></tr>
-    <tr><td>1 · 9–15 Nov</td><td>Ch 1 Foundations — modules, providers, guards, interceptors</td><td>Sun 15 Nov</td></tr>
-    <tr><td>2 · 16–22 Nov</td><td>Ch 2 Advanced + Ch 3 Config, TypeORM, Caching</td><td>Sun 22 Nov</td></tr>
-    <tr><td>3 · 23–29 Nov</td><td>Ch 3 Queue, Logger, Multer + Ch 4 Taxi kickoff</td><td>Sun 29 Nov</td></tr>
-    <tr><td>4 · 30 Nov–6 Dec</td><td>Ch 4 Taxi — OTP, microservices, trips, WebSocket, fare</td><td>Sun 6 Dec · v1.0</td></tr>
-  </table>
-
-  <footer>NestJS Taxi Learning · Course: <a href="https://codehalic.ir/courses/nestjs-intermediate">codehalic.ir/courses/nestjs-intermediate</a> · Notes site for personal review.</footer>
-</main>
+    <footer><span data-l="en">NestJS Taxi Learning · Course:</span><span data-l="fa">یادگیری NestJS تاکسی · دوره:</span> <a href="https://codehalic.ir/courses/nestjs-intermediate">codehalic.ir/courses/nestjs-intermediate</a> · <span data-l="en">Notes site for personal review.</span><span data-l="fa">سایت یادداشت‌ها برای مرور شخصی.</span></footer>
+  </main>
+</div>
+<script src="assets/site.js"></script>
 </body>
 </html>
