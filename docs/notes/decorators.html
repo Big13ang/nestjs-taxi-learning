@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Decorators — NestJS Notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Vazirmatn:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header class="top"><div class="top-in"><div class="logo">N</div><b>NestJS Notes</b><span>Ch 1 · Decorators · 8 Nov 2026</span></div></header>
+
+<main class="wrap">
+  <section class="hero">
+    <a class="back" href="../index.html">← All notes</a>
+    <div class="kicker" style="margin-top:18px">Session 1 · Sun 8 Nov · 18:04–22:30</div>
+    <h1>Decorators: code that runs when a class is <i>defined</i></h1>
+    <p class="lede">A decorator is just a <b>function</b> that receives the thing it sits on — a class, a method, a property, or a parameter — and can observe it, change it, or leave metadata on it. It runs <b>once, at definition time</b>, not when you use the thing.</p>
+    <div class="meta"><span class="chip red">CORE CONCEPT</span><span class="chip">Ch 1</span><span class="chip">TypeScript + Nest</span><span class="chip">12 min read</span></div>
+  </section>
+
+  <h2>Your note, corrected and sharpened</h2>
+  <pre><code>@Logger()
+class Feed {}
+
+const f = new Feed();   // ← Logger does NOT run here</code></pre>
+  <p>Two small fixes to the raw note: it's <code>class Feed {}</code> — no <code>()</code> after the name — and "runs when you start your project" is true <i>because</i> that's when the file is first imported and the class definition is evaluated. The precise rule is:</p>
+  <div class="callout key"><b>Key idea</b>A decorator runs <b>once, when the class definition is evaluated</b> (module load / app startup in Nest). It does <b>not</b> run on <code>new Feed()</code>, and it does <b>not</b> run per request.</div>
+  <div class="callout link"><b>The split that explains Nest</b>The decorator <i>function</i> runs at definition time. What it leaves behind is what acts later: most Nest decorators only <b>store metadata</b> (<code>Reflect.defineMetadata</code>) — e.g. <code>@Get(':id')</code> writes "this method = GET /:id". Nest reads that metadata at startup and at runtime. Definition-time execution, runtime effect.</div>
+
+  <h2>Mental model</h2>
+  <p>Think of a decorator as a <b>sticker you put on a blueprint</b>, not on the houses built from it. You sticker the blueprint once, while drawing it. Every house built later carries the sticker's effect — but you never re-sticker per house. Heavy work (DB calls, network) does <i>not</i> belong in a decorator for exactly this reason: it would run once, at load, before your app is ready.</p>
+
+  <h2>All possible decorators — there are exactly 5 kinds</h2>
+  <p>Every decorator in TypeScript (and therefore in Nest) is one of these five. What changes is <b>what it can sit on</b> and <b>what arguments it receives</b>.</p>
+  <table>
+    <tr><th>Kind</th><th>Sits on</th><th>Receives</th><th>You've seen</th></tr>
+    <tr><td><b>1. Class</b></td><td>A class</td><td><code>constructor</code></td><td><code>@Injectable()</code> <code>@Controller()</code> <code>@Module()</code></td></tr>
+    <tr><td><b>2. Method</b></td><td>A method</td><td><code>target, key, descriptor</code></td><td><code>@Get()</code> <code>@Post()</code> custom <code>@LogTime()</code></td></tr>
+    <tr><td><b>3. Accessor</b></td><td>A <code>get</code> / <code>set</code></td><td><code>target, key, descriptor</code> — descriptor holds <code>get</code>/<code>set</code></td><td>Rare in Nest; same shape as method</td></tr>
+    <tr><td><b>4. Property</b></td><td>A field</td><td><code>target, key</code> — <b>no descriptor</b>, return value is ignored</td><td><code>@IsString()</code> <code>@Column()</code></td></tr>
+    <tr><td><b>5. Parameter</b></td><td>One argument of a method / constructor</td><td><code>target, key, index</code></td><td><code>@Body()</code> <code>@Param()</code> <code>@Inject()</code> <code>@Req()</code></td></tr>
+  </table>
+  <div class="callout tip"><b>Memorize this</b><code>target</code> = the prototype for instance members (<code>Feed.prototype</code>), and the constructor itself for static members and the class. If you can recite the 5 kinds + their arguments, you can read <i>any</i> decorator code — including Nest's source.</div>
+  <p class="muted">Setup note: Nest uses the legacy TypeScript decorator mode, so <code>tsconfig.json</code> needs <code>"experimentalDecorators": true</code> and <code>"emitDecoratorMetadata": true</code>. The Nest CLI scaffold already sets both.</p>
+
+  <h2>Decorator factory — a decorator that takes arguments</h2>
+  <p>A plain decorator <i>is</i> the function. A <b>factory</b> is a function that <i>returns</i> that function — that's the only way to pass your own values in.</p>
+  <pre><code>function Logger(prefix: string) {        // 1 · FACTORY — takes YOUR arguments
+  return function (target: Function) {   // 2 · the actual DECORATOR
+    console.log(`[${prefix}] ${target.name} was defined`);
+  };
+}
+
+@Logger('FEED')   // call the factory → it returns a decorator → decorator runs on the class
+class FeedService {}
+
+// App starts, file is imported → console: [FEED] FeedService was defined
+// new FeedService() ten times  → nothing. It already ran, once.</code></pre>
+  <div class="callout warn"><b>Watch out — the parentheses are the whole difference</b><code>@Logger</code> = the function itself is the decorator (no arguments possible). <code>@Logger('FEED')</code> = call the factory first, use what it returns. Nearly every Nest decorator is a factory: <code>@Controller('feed')</code>, <code>@Get(':id')</code>, and your future <code>@Roles('ADMIN')</code> in the taxi project is just <code>SetMetadata('roles', ...roles)</code> — a factory.</div>
+
+  <h2>Multiple decorators — why the order looks reversed</h2>
+  <pre><code>@First()
+@Second()
+@Third()
+class Demo {}</code></pre>
+  <p>Two different phases, two different directions:</p>
+  <table>
+    <tr><th>Phase</th><th>Order</th><th>For the example</th></tr>
+    <tr><td><b>1. Factories are evaluated</b></td><td>Top → bottom</td><td><code>First()</code> → <code>Second()</code> → <code>Third()</code></td></tr>
+    <tr><td><b>2. Decorators are invoked</b></td><td>Bottom → top</td><td><code>Third</code> → <code>Second</code> → <code>First</code></td></tr>
+  </table>
+  <p><b>Why?</b> It's function composition. <code>@f @g x</code> means <code>f(g(x))</code> — the decorator <i>closest</i> to the class has to finish first, so the next one up receives its result and can wrap it. Exactly like an onion, or a stack: the last one you put on is the first one that actually applies.</p>
+  <div class="callout key"><b>Memory line</b><b>Factories read top-down. Decorators run bottom-up.</b> Closest to the class runs first.</div>
+  <p>And inside one whole class, TypeScript applies things in this fixed order:</p>
+  <ol>
+    <li>Parameter, then method / accessor / property decorators — for each <b>instance</b> member</li>
+    <li>Same — for each <b>static</b> member</li>
+    <li>Parameter decorators — for the <b>constructor</b></li>
+    <li>Class decorators — <b>last</b></li>
+  </ol>
+
+  <h2>Examples to memorize — one per kind</h2>
+  <p>Don't memorize all five perfectly today. Memorize <b>example 1 (class + factory)</b> cold, and be able to <i>recognize</i> the shape of the other four.</p>
+
+  <h3>1 · Class decorator (factory) — tag a class</h3>
+  <pre><code>function Tag(label: string) {
+  return function (target: Function) {
+    (target as any).label = label;   // leave something on the class itself
+  };
+}
+
+@Tag('feed-service')
+class FeedService {}
+
+console.log((FeedService as any).label);  // 'feed-service' — set at definition time</code></pre>
+
+  <h3>2 · Method decorator — wrap a method (timing)</h3>
+  <pre><code>function LogTime(target: any, key: string, descriptor: PropertyDescriptor) {
+  const original = descriptor.value;
+  descriptor.value = async function (...args: any[]) {
+    const start = Date.now();
+    const result = await original.apply(this, args);
+    console.log(`${key} took ${Date.now() - start}ms`);
+    return result;
+  };
+  return descriptor;   // method/accessor decorators may return a new descriptor
+}
+
+class FeedService {
+  @LogTime
+  async getFeed() { /* ... */ }   // decorator runs at definition; the WRAPPER runs per call
+}</code></pre>
+  <div class="example"><b class="t">See the split again</b><p style="margin:6px 0 0"><code>@LogTime</code> itself ran once, at startup, and swapped in a wrapper. The wrapper is what runs on every <code>getFeed()</code> call. That two-step — <i>decorate once, effect per use</i> — is how almost all powerful decorators work.</p></div>
+
+  <h3>3 · Property decorator — metadata only</h3>
+  <pre><code>function Required(target: any, key: string) {
+  const fields: string[] = Reflect.getMetadata('required', target) ?? [];
+  Reflect.defineMetadata('required', [...fields, key], target);
+}
+
+class CreateTripDto {
+  @Required
+  pickup!: string;   // no descriptor exists for properties — metadata is all you get
+}</code></pre>
+
+  <h3>4 · Parameter decorator — mark an argument</h3>
+  <pre><code>function LogParam(target: any, key: string | undefined, index: number) {
+  console.log(`Parameter #${index} of ${String(key ?? 'constructor')} is decorated`);
+}
+
+class TripsController {
+  create(@LogParam dto: object) {}   // prints at definition time: Parameter #0 of create…
+}</code></pre>
+  <p class="muted">This is the family Nest's <code>createParamDecorator()</code> builds on — your <code>@CurrentUser()</code> in the taxi project will be one of these, except Nest gives it a factory that also runs per request to extract the value.</p>
+
+  <h3>5 · Accessor decorator — guard a setter</h3>
+  <pre><code>function Positive(target: any, key: string, descriptor: PropertyDescriptor) {
+  const originalSet = descriptor.set!;
+  descriptor.set = function (value: number) {
+    if (value &lt; 0) throw new Error(`${key} cannot be negative`);
+    originalSet.call(this, value);
+  };
+}
+
+class Wallet {
+  @Positive
+  set balance(value: number) { /* store it */ }
+}</code></pre>
+
+  <h2>Train on these</h2>
+  <p>Cover the answers, say the output out loud, then check. Predicting output is the fastest way to make the order stick.</p>
+
+  <div class="quiz"><b>Drill 1 — predict the output</b>
+    <pre><code>function deco(name: string) {
+  console.log(`factory ${name}`);
+  return function () { console.log(`decorator ${name}`); };
+}
+
+@deco('A')
+@deco('B')
+class Demo {}
+
+new Demo();
+new Demo();</code></pre>
+    <details><summary><b>Answer</b></summary><p><code>factory A → factory B → decorator B → decorator A</code> — and then nothing for the two <code>new Demo()</code> calls. Factories top-down, decorators bottom-up, all of it once at definition time.</p></details>
+  </div>
+
+  <div class="quiz"><b>Drill 2 — spot the bug</b>
+    <p> A teammate writes a decorator that opens a database connection inside the decorator function "so it's ready before any request." What's wrong?</p>
+    <details><summary><b>Answer</b></summary><p>The decorator runs at class-definition / module-load time — before Nest has built the app, read config, or connected its own providers. Decorators should be cheap: store metadata or wrap a method. Real connections belong in a provider's lifecycle hook (e.g. <code>onModuleInit</code> — Chapter 2).</p></details>
+  </div>
+
+  <div class="quiz"><b>Drill 3 — write from memory (no peeking up)</b>
+    <ol>
+      <li>Write the skeleton of a class-decorator <b>factory</b> called <code>@Entity(tableName)</code> that stores the table name as metadata on the class.</li>
+      <li>Write <code>@Sealed</code> (no factory) that does <code>Object.seal(target)</code> and <code>Object.seal(target.prototype)</code>.</li>
+      <li>List the 5 decorator kinds and the arguments each receives — from memory.</li>
+    </ol>
+    <details><summary><b>Check Drill 3.1</b></summary><pre><code>function Entity(tableName: string) {
+  return function (target: Function) {
+    Reflect.defineMetadata('table', tableName, target);
+  };
+}</code></pre><p>3.2 is two lines inside a plain function taking <code>target: Function</code>. For 3.3, compare with the table above.</p></details>
+  </div>
+
+  <h2>Where this lands in Nest / the taxi project</h2>
+  <div class="callout link"><b>Taxi / InShop connection</b>Everything you annotate for the next month is a decorator from this page: <code>@Module</code> wires the app, <code>@Controller</code> + <code>@Get</code> define routes, <code>@Injectable</code> marks providers, <code>@Roles</code> / <code>@CurrentUser</code> (Ch 4) are custom factories you will write yourself. In InShop, the same mechanism is how your Guards, throttler and interceptors attach to the feed routes — all decided from metadata written at definition time.</div>
+
+  <div class="quiz"><b>Review questions — answer without looking up</b>
+    <ol>
+      <li>When exactly does <code>@Logger()</code> on <code>class FeedService</code> run — and when does it <i>not</i> run?</li>
+      <li>Name the 5 decorator kinds and what each one receives.</li>
+      <li>What is the difference between <code>@Logger</code> and <code>@Logger('FEED')</code>?</li>
+      <li><code>@A() @B() @C() class X {}</code> — in what order do the factories evaluate, and in what order do the decorators run? Why?</li>
+      <li>A Nest decorator like <code>@Get(':id')</code> runs at definition time — so how does anything happen at request time?</li>
+    </ol>
+  </div>
+
+  <footer><a class="back" href="../index.html">← Back to all notes</a> · Session 1 · 8 Nov 2026 · Raw note: <code>notes/decorators.md</code></footer>
+</main>
+</body>
+</html>
