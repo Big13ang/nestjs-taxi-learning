@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -7,26 +7,38 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Vazirmatn:wght@400;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../assets/style.css">
+<script>try{var l=localStorage.getItem("nestjs-notes-lang");if(l==="fa"){document.documentElement.lang="fa";document.documentElement.dir="rtl";}}catch(e){}</script>
 </head>
-<body>
-<header class="top"><div class="top-in"><div class="logo">N</div><b>NestJS Notes</b><span>Ch 1 · Lessons 12–13</span></div></header>
+<body data-root="../" data-page="guards">
+<div class="book">
+  <nav class="toc" aria-label="Book contents"></nav>
+  <main>
+    <header class="page-head">
+      <div>
+        <a class="back" href="../index.html"><span data-l="en">← All notes</span><span data-l="fa">→ همه یادداشت‌ها</span></a>
+        <div class="kicker" style="margin-top:14px"><span data-l="en">Sample note · Format preview · Ch 1 · Lessons 12–13</span><span data-l="fa">یادداشت نمونه · پیش‌نمایش قالب · فصل ۱ · درس ۱۲ و ۱۳</span></div>
+        <h1><span data-l="en">Guards: the bouncer of your API</span><span data-l="fa">Guardها: نگهبان درِ API تو</span></h1>
+        <p class="sub"><span data-l="en">A Guard answers one yes/no question before a route runs: <b>is this request allowed in?</b> If it returns <code>false</code>, Nest stops everything and replies 403 — the controller never even hears about it.</span><span data-l="fa">Guard قبل از اجرا شدن یک Route به یک سوال بله/خیر جواب می‌دهد: <b>آیا این Request اجازه ورود دارد؟</b> اگر <code>false</code> برگرداند، Nest همه چیز را متوقف می‌کند و جواب 403 می‌دهد — Controller اصلاً خبردار نمی‌شود.</span></p>
+        <p class="meta"><span data-l="en">SAMPLE · Concept · Auth · 5 min</span><span data-l="fa">نمونه · مفهوم · احراز هویت · ۵ دقیقه</span></p>
+      </div>
+      <button class="btn" type="button" id="lang-toggle">فارسی</button>
+    </header>
 
-<main class="wrap">
-  <section class="hero">
-    <a class="back" href="../index.html">← All notes</a>
-    <div class="kicker" style="margin-top:18px">Sample note · Format preview</div>
-    <h1>Guards: the bouncer of your API</h1>
-    <p class="lede">A Guard answers one yes/no question before a route runs: <b>is this request allowed in?</b> If it returns <code>false</code>, Nest stops everything and replies 403 — the controller never even hears about it.</p>
-    <div class="meta"><span class="chip red">SAMPLE</span><span class="chip">Concept</span><span class="chip">Auth</span><span class="chip">5 min</span></div>
-  </section>
+    <div class="focus">
+      <p class="focus-label"><span data-l="en">The one rule of this page</span><span data-l="fa">قانون اصلی این صفحه</span></p>
+      <p class="rule"><span data-l="en">Guards run after middleware and before the controller, and they can read the route's metadata.</span><span data-l="fa">Guardها بعد از Middleware و قبل از Controller اجرا می‌شوند و می‌توانند Metadata آن Route را بخوانند.</span></p>
+    </div>
 
-  <h2>Mental model</h2>
-  <p>Think of a club. The <b>middleware</b> is the street camera — it sees everyone passing. The <b>Guard</b> is the bouncer at the door — it checks your ID and decides. The <b>controller</b> is the party inside — it only meets people who got in.</p>
-  <div class="callout key"><b>Key idea</b>Guards run <i>after</i> middleware and <i>before</i> interceptors, pipes and the controller. They have access to the route's metadata — so they can behave differently per route.</div>
+    <section id="model">
+      <h2><span data-l="en">Mental model</span><span data-l="fa">مدل ذهنی</span></h2>
+      <p><span data-l="en">Think of a club. The <b>middleware</b> is the street camera — it sees everyone passing. The <b>Guard</b> is the bouncer at the door — it checks your ID and decides. The <b>controller</b> is the party inside — it only meets people who got in.</span><span data-l="fa">یک کلاب را تصور کن. <b>Middleware</b> دوربین خیابان است — همه رهگذرها را می‌بیند. <b>Guard</b> نگهبان دم در است — کارت شناسایی‌ات را چک می‌کند و تصمیم می‌گیرد. <b>Controller</b> مهمانی داخل است — فقط کسانی را می‌بیند که وارد شده‌اند.</span></p>
+      <p><span data-l="en">Because a Guard can read the route's metadata, it can behave differently per route — that is the whole point of its position in the chain.</span><span data-l="fa">چون Guard می‌تواند Metadata آن Route را بخواند، می‌تواند برای هر Route رفتار متفاوتی داشته باشد — و تمام ارزش جایگاهش در این زنجیره همین است.</span></p>
+    </section>
 
-  <h2>Simple example</h2>
-  <p>Only admins may delete a driver. Instead of checking the role inside every controller, write it once as a Guard:</p>
-  <pre><code>@Injectable()
+    <section id="example">
+      <h2><span data-l="en">Simple example</span><span data-l="fa">مثال ساده</span></h2>
+      <p><span data-l="en">Only admins may delete a driver. Instead of checking the role inside every controller, write it once as a Guard:</span><span data-l="fa">فقط Adminها می‌توانند یک راننده را حذف کنند. به جای چک کردن Role داخل تک‌تک Controllerها، آن را یک بار به‌صورت Guard بنویس:</span></p>
+      <pre><code>@Injectable()
 export class AdminGuard implements CanActivate {
   canActivate(ctx: ExecutionContext): boolean {
     const req = ctx.switchToHttp().getRequest();
@@ -37,25 +49,34 @@ export class AdminGuard implements CanActivate {
 @Delete(':id')
 @UseGuards(AdminGuard)   // ← bouncer posted at this door
 removeDriver(@Param('id') id: string) { /* only admins reach this */ }</code></pre>
-  <div class="example"><b class="t">See it happen</b>
-    <p style="margin:6px 0 0">A driver sends <code>DELETE /drivers/7</code> → Guard reads <code>role: 'DRIVER'</code> → returns <code>false</code> → <b>403 Forbidden</b>. The <code>removeDriver</code> method never runs. An admin sends the same request → <code>true</code> → driver deleted.</p>
-  </div>
+      <div class="example"><b class="t"><span data-l="en">See it happen</span><span data-l="fa">در عمل ببین</span></b>
+        <p style="margin:6px 0 0"><span data-l="en">A driver sends <code>DELETE /drivers/7</code> → Guard reads <code>role: 'DRIVER'</code> → returns <code>false</code> → <b>403 Forbidden</b>. The <code>removeDriver</code> method never runs. An admin sends the same request → <code>true</code> → driver deleted.</span><span data-l="fa">یک راننده <code>DELETE /drivers/7</code> می‌فرستد ← Guard مقدار <code>role: 'DRIVER'</code> را می‌خواند ← <code>false</code> برمی‌گرداند ← <b>403 Forbidden</b>. متد <code>removeDriver</code> اصلاً اجرا نمی‌شود. یک Admin همان Request را می‌فرستد ← <code>true</code> ← راننده حذف می‌شود.</span></p>
+      </div>
+    </section>
 
-  <h2>Common mistake</h2>
-  <div class="callout warn"><b>Watch out</b>Doing role checks <i>inside</i> controllers (<code>if (user.role !== 'ADMIN') throw…</code> copy-pasted everywhere). One forgotten check = one open door. Guards exist so the check lives in exactly one place.</div>
+    <section id="mistake">
+      <h2><span data-l="en">Common mistake</span><span data-l="fa">اشتباه رایج</span></h2>
+      <div class="callout warn"><b><span data-l="en">Watch out</span><span data-l="fa">حواست باشد</span></b><span data-l="en">Doing role checks <i>inside</i> controllers (<code>if (user.role !== 'ADMIN') throw…</code> copy-pasted everywhere). One forgotten check = one open door. Guards exist so the check lives in exactly one place.</span><span data-l="fa">چک کردن Role <i>داخل</i> Controllerها (<code>if (user.role !== 'ADMIN') throw…</code> که همه جا Copy-Paste شده). یک چک فراموش‌شده = یک درِ باز. Guardها برای این هستند که چک فقط در یک جا زندگی کند.</span></div>
+    </section>
 
-  <h2>Where you'll use it in the taxi project</h2>
-  <div class="callout link"><b>InShop / Taxi connection</b>Ch 4 builds <b>DriverGuard</b> and <b>AdminGuard</b> exactly like this — and in InShop, the same pattern is what a throttler / auth guard does at the edge of every route.</div>
+    <section id="project">
+      <h2><span data-l="en">Where you'll use it in the taxi project</span><span data-l="fa">در پروژه تاکسی کجا استفاده‌اش می‌کنی</span></h2>
+      <div class="callout link"><b><span data-l="en">InShop / Taxi connection</span><span data-l="fa">ارتباط با InShop / تاکسی</span></b><span data-l="en">Ch 4 builds <b>DriverGuard</b> and <b>AdminGuard</b> exactly like this — and in InShop, the same pattern is what a throttler / auth guard does at the edge of every route.</span><span data-l="fa">فصل ۴ دقیقاً همین‌طور <b>DriverGuard</b> و <b>AdminGuard</b> را می‌سازد — و در InShop هم همین الگوست که یک Throttler / Auth Guard در لبه هر Route انجام می‌دهد.</span></div>
+    </section>
 
-  <div class="quiz"><b>Review questions — answer without looking up</b>
-    <ol>
-      <li>Where does a Guard sit in the request lifecycle?</li>
-      <li>What happens, exactly, when <code>canActivate</code> returns <code>false</code>?</li>
-      <li>Why is a Guard better than an <code>if</code> inside the controller?</li>
-    </ol>
-  </div>
+    <section id="review">
+      <div class="quiz"><b><span data-l="en">Review questions — answer without looking up</span><span data-l="fa">سوال‌های مرور — بدون نگاه کردن جواب بده</span></b>
+        <ol>
+          <li><span data-l="en">Where does a Guard sit in the request lifecycle?</span><span data-l="fa">Guard در چرخه حیات Request کجا قرار می‌گیرد؟</span></li>
+          <li><span data-l="en">What happens, exactly, when <code>canActivate</code> returns <code>false</code>?</span><span data-l="fa">وقتی <code>canActivate</code> مقدار <code>false</code> برمی‌گرداند دقیقاً چه اتفاقی می‌افتد؟</span></li>
+          <li><span data-l="en">Why is a Guard better than an <code>if</code> inside the controller?</span><span data-l="fa">چرا Guard از یک <code>if</code> داخل Controller بهتر است؟</span></li>
+        </ol>
+      </div>
+    </section>
 
-  <footer><a class="back" href="../index.html">← Back to all notes</a> · Sample note — your real notes will replace this format page by page.</footer>
-</main>
+    <footer><a class="back" href="../index.html"><span data-l="en">← Back to all notes</span><span data-l="fa">→ برگشت به همه یادداشت‌ها</span></a> · <span data-l="en">Sample note — your real notes will replace this format page by page.</span><span data-l="fa">یادداشت نمونه — یادداشت‌های واقعی تو صفحه به صفحه جای این قالب را می‌گیرند.</span></footer>
+  </main>
+</div>
+<script src="../assets/site.js"></script>
 </body>
 </html>

@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -7,47 +7,63 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Vazirmatn:wght@400;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="../assets/style.css">
+<script>try{var l=localStorage.getItem("nestjs-notes-lang");if(l==="fa"){document.documentElement.lang="fa";document.documentElement.dir="rtl";}}catch(e){}</script>
 </head>
-<body>
-<header class="top"><div class="top-in"><div class="logo">N</div><b>NestJS Notes</b><span>Ch 1 · Decorators · 8 Nov 2026</span></div></header>
+<body data-root="../" data-page="decorators">
+<div class="book">
+  <nav class="toc" aria-label="Book contents"></nav>
+  <main>
+    <header class="page-head">
+      <div>
+        <a class="back" href="../index.html"><span data-l="en">← All notes</span><span data-l="fa">→ همه یادداشت‌ها</span></a>
+        <div class="kicker" style="margin-top:14px"><span data-l="en">Session 1 · Sun 8 Nov · 18:04–22:30</span><span data-l="fa">جلسه ۱ · یکشنبه ۸ نوامبر · ۱۸:۰۴ تا ۲۲:۳۰</span></div>
+        <h1><span data-l="en">Decorators: code that runs when a class is defined</span><span data-l="fa">Decoratorها: کدی که هنگام تعریف Class اجرا می‌شود</span></h1>
+        <p class="sub"><span data-l="en">A decorator is just a <b>function</b> that receives the thing it sits on — a class, a method, a property, or a parameter — and can observe it, change it, or leave metadata on it. It runs <b>once, at definition time</b>, not when you use the thing.</span><span data-l="fa">Decorator در اصل فقط یک <b>Function</b> است که چیزی را که رویش نشسته دریافت می‌کند — یک Class، یک Method، یک Property یا یک Parameter — و می‌تواند آن را ببیند، تغییرش بدهد یا رویش Metadata بگذارد. فقط <b>یک بار، در زمان تعریف (Definition Time)</b> اجرا می‌شود، نه وقتی از آن چیز استفاده می‌کنی.</span></p>
+        <p class="meta"><span data-l="en">Chapter 1, TypeScript and Nest, a 12 minute read</span><span data-l="fa">فصل ۱، TypeScript و Nest، ۱۲ دقیقه مطالعه</span></p>
+      </div>
+      <button class="btn" type="button" id="lang-toggle">فارسی</button>
+    </header>
 
-<main class="wrap">
-  <section class="hero">
-    <a class="back" href="../index.html">← All notes</a>
-    <div class="kicker" style="margin-top:18px">Session 1 · Sun 8 Nov · 18:04–22:30</div>
-    <h1>Decorators: code that runs when a class is <i>defined</i></h1>
-    <p class="lede">A decorator is just a <b>function</b> that receives the thing it sits on — a class, a method, a property, or a parameter — and can observe it, change it, or leave metadata on it. It runs <b>once, at definition time</b>, not when you use the thing.</p>
-    <div class="meta"><span class="chip red">CORE CONCEPT</span><span class="chip">Ch 1</span><span class="chip">TypeScript + Nest</span><span class="chip">12 min read</span></div>
-  </section>
+    <div class="focus">
+      <p class="focus-label"><span data-l="en">The one rule of this page</span><span data-l="fa">قانون اصلی این صفحه</span></p>
+      <p class="rule"><span data-l="en">A decorator runs once, when the class definition is evaluated. Not on <code>new</code>, not per request.</span><span data-l="fa">Decorator فقط یک بار اجرا می‌شود، وقتی تعریف Class ارزیابی می‌شود. نه با <code>new</code>، نه برای هر Request.</span></p>
+    </div>
 
-  <h2>Your note, corrected and sharpened</h2>
-  <pre><code>@Logger()
+    <section id="core">
+      <h2><span data-l="en">Your note, corrected and sharpened</span><span data-l="fa">یادداشت تو، اصلاح و دقیق‌شده</span></h2>
+      <pre><code>@Logger()
 class Feed {}
 
 const f = new Feed();   // ← Logger does NOT run here</code></pre>
-  <p>Two small fixes to the raw note: it's <code>class Feed {}</code> — no <code>()</code> after the name — and "runs when you start your project" is true <i>because</i> that's when the file is first imported and the class definition is evaluated. The precise rule is:</p>
-  <div class="callout key"><b>Key idea</b>A decorator runs <b>once, when the class definition is evaluated</b> (module load / app startup in Nest). It does <b>not</b> run on <code>new Feed()</code>, and it does <b>not</b> run per request.</div>
-  <div class="callout link"><b>The split that explains Nest</b>The decorator <i>function</i> runs at definition time. What it leaves behind is what acts later: most Nest decorators only <b>store metadata</b> (<code>Reflect.defineMetadata</code>) — e.g. <code>@Get(':id')</code> writes "this method = GET /:id". Nest reads that metadata at startup and at runtime. Definition-time execution, runtime effect.</div>
+      <p><span data-l="en">Two small fixes to the raw note: it's <code>class Feed {}</code> — no <code>()</code> after the name — and "runs when you start your project" is true <i>because</i> that's when the file is first imported and the class definition is evaluated. The precise rule is:</span><span data-l="fa">دو اصلاح کوچک در یادداشت خام: شکل درست <code>class Feed {}</code> است — بعد از اسم Class پرانتز نمی‌آید — و «وقتی پروژه را اجرا می‌کنی اجرا می‌شود» از این جهت درست است که در همان لحظه فایل برای اولین بار Import می‌شود و تعریف Class ارزیابی (Evaluate) می‌شود. قانون دقیق این است:</span></p>
+      <p><span data-l="en">In Nest, "definition time" means module load — app startup. That is the moment the rule above refers to.</span><span data-l="fa">در Nest «زمان تعریف» یعنی زمان Load شدن Module — همان بالا آمدن برنامه. قانون بالا دقیقاً به همین لحظه اشاره می‌کند.</span></p>
+      <div class="callout link"><b><span data-l="en">The split that explains Nest</span><span data-l="fa">تفکیکی که Nest را توضیح می‌دهد</span></b><span data-l="en">The decorator <i>function</i> runs at definition time. What it leaves behind is what acts later: most Nest decorators only <b>store metadata</b> (<code>Reflect.defineMetadata</code>) — e.g. <code>@Get(':id')</code> writes "this method = GET /:id". Nest reads that metadata at startup and at runtime. Definition-time execution, runtime effect.</span><span data-l="fa">خودِ <i>Function</i> دکوراتور در زمان تعریف اجرا می‌شود. چیزی که از خودش به جا می‌گذارد بعداً عمل می‌کند: بیشتر Decoratorهای Nest فقط <b>Metadata ذخیره می‌کنند</b> (<code>Reflect.defineMetadata</code>) — مثلاً <code>@Get(':id')</code> می‌نویسد «این Method یعنی GET /:id». Nest این Metadata را هنگام Startup و Runtime می‌خواند. اجرا در زمان تعریف، اثر در زمان اجرا.</span></div>
+    </section>
 
-  <h2>Mental model</h2>
-  <p>Think of a decorator as a <b>sticker you put on a blueprint</b>, not on the houses built from it. You sticker the blueprint once, while drawing it. Every house built later carries the sticker's effect — but you never re-sticker per house. Heavy work (DB calls, network) does <i>not</i> belong in a decorator for exactly this reason: it would run once, at load, before your app is ready.</p>
+    <section id="mental-model">
+      <h2><span data-l="en">Mental model</span><span data-l="fa">مدل ذهنی</span></h2>
+      <p><span data-l="en">Think of a decorator as a <b>sticker you put on a blueprint</b>, not on the houses built from it. You sticker the blueprint once, while drawing it. Every house built later carries the sticker's effect — but you never re-sticker per house. Heavy work (DB calls, network) does <i>not</i> belong in a decorator for exactly this reason: it would run once, at load, before your app is ready.</span><span data-l="fa">Decorator را مثل <b>برچسبی روی نقشه ساختمان</b> تصور کن، نه روی خانه‌هایی که از آن نقشه ساخته می‌شوند. برچسب را یک بار، موقع کشیدن نقشه می‌زنی. هر خانه‌ای که بعداً ساخته شود اثر برچسب را دارد — ولی برای هر خانه دوباره برچسب نمی‌زنی. کار سنگین (تماس با DB، شبکه) دقیقاً به همین دلیل جایگاهی در Decorator <i>ندارد</i>: یک بار، موقع Load اجرا می‌شود، قبل از اینکه برنامه‌ات آماده باشد.</span></p>
+    </section>
 
-  <h2>All possible decorators — there are exactly 5 kinds</h2>
-  <p>Every decorator in TypeScript (and therefore in Nest) is one of these five. What changes is <b>what it can sit on</b> and <b>what arguments it receives</b>.</p>
-  <table>
-    <tr><th>Kind</th><th>Sits on</th><th>Receives</th><th>You've seen</th></tr>
-    <tr><td><b>1. Class</b></td><td>A class</td><td><code>constructor</code></td><td><code>@Injectable()</code> <code>@Controller()</code> <code>@Module()</code></td></tr>
-    <tr><td><b>2. Method</b></td><td>A method</td><td><code>target, key, descriptor</code></td><td><code>@Get()</code> <code>@Post()</code> custom <code>@LogTime()</code></td></tr>
-    <tr><td><b>3. Accessor</b></td><td>A <code>get</code> / <code>set</code></td><td><code>target, key, descriptor</code> — descriptor holds <code>get</code>/<code>set</code></td><td>Rare in Nest; same shape as method</td></tr>
-    <tr><td><b>4. Property</b></td><td>A field</td><td><code>target, key</code> — <b>no descriptor</b>, return value is ignored</td><td><code>@IsString()</code> <code>@Column()</code></td></tr>
-    <tr><td><b>5. Parameter</b></td><td>One argument of a method / constructor</td><td><code>target, key, index</code></td><td><code>@Body()</code> <code>@Param()</code> <code>@Inject()</code> <code>@Req()</code></td></tr>
-  </table>
-  <div class="callout tip"><b>Memorize this</b><code>target</code> = the prototype for instance members (<code>Feed.prototype</code>), and the constructor itself for static members and the class. If you can recite the 5 kinds + their arguments, you can read <i>any</i> decorator code — including Nest's source.</div>
-  <p class="muted">Setup note: Nest uses the legacy TypeScript decorator mode, so <code>tsconfig.json</code> needs <code>"experimentalDecorators": true</code> and <code>"emitDecoratorMetadata": true</code>. The Nest CLI scaffold already sets both.</p>
+    <section id="all-kinds">
+      <h2><span data-l="en">All possible decorators — there are exactly 5 kinds</span><span data-l="fa">همه Decoratorهای ممکن — دقیقاً ۵ نوع وجود دارد</span></h2>
+      <p><span data-l="en">Every decorator in TypeScript (and therefore in Nest) is one of these five. What changes is <b>what it can sit on</b> and <b>what arguments it receives</b>.</span><span data-l="fa">هر Decorator در TypeScript (و در نتیجه در Nest) یکی از همین پنج نوع است. چیزی که عوض می‌شود <b>این است که روی چه چیزی می‌نشیند</b> و <b>چه Argumentهایی دریافت می‌کند</b>.</span></p>
+      <table>
+        <tr><th><span data-l="en">Kind</span><span data-l="fa">نوع</span></th><th><span data-l="en">Sits on</span><span data-l="fa">روی چه می‌نشیند</span></th><th><span data-l="en">Receives</span><span data-l="fa">چه دریافت می‌کند</span></th><th><span data-l="en">You've seen</span><span data-l="fa">دیده‌ای</span></th></tr>
+        <tr><td><b>1. Class</b></td><td><span data-l="en">A class</span><span data-l="fa">یک Class</span></td><td><code>constructor</code></td><td><code>@Injectable()</code> <code>@Controller()</code> <code>@Module()</code></td></tr>
+        <tr><td><b>2. Method</b></td><td><span data-l="en">A method</span><span data-l="fa">یک Method</span></td><td><code>target, key, descriptor</code></td><td><code>@Get()</code> <code>@Post()</code> <span data-l="en">custom</span><span data-l="fa">سفارشی</span> <code>@LogTime()</code></td></tr>
+        <tr><td><b>3. Accessor</b></td><td><span data-l="en">A <code>get</code> / <code>set</code></span><span data-l="fa">یک <code>get</code> / <code>set</code></span></td><td><code>target, key, descriptor</code> — <span data-l="en">descriptor holds <code>get</code>/<code>set</code></span><span data-l="fa">داخل descriptor ‏<code>get</code>/<code>set</code> است</span></td><td><span data-l="en">Rare in Nest; same shape as method</span><span data-l="fa">در Nest نادر است؛ همان شکل Method</span></td></tr>
+        <tr><td><b>4. Property</b></td><td><span data-l="en">A field</span><span data-l="fa">یک Field</span></td><td><code>target, key</code> — <span data-l="en"><b>no descriptor</b>, return value is ignored</span><span data-l="fa"><b>بدون descriptor</b>، مقدار برگشتی نادیده گرفته می‌شود</span></td><td><code>@IsString()</code> <code>@Column()</code></td></tr>
+        <tr><td><b>5. Parameter</b></td><td><span data-l="en">One argument of a method / constructor</span><span data-l="fa">یک Argument از Method / Constructor</span></td><td><code>target, key, index</code></td><td><code>@Body()</code> <code>@Param()</code> <code>@Inject()</code> <code>@Req()</code></td></tr>
+      </table>
+      <div class="callout tip"><b><span data-l="en">Memorize this</span><span data-l="fa">این را حفظ کن</span></b><span data-l="en"><code>target</code> = the prototype for instance members (<code>Feed.prototype</code>), and the constructor itself for static members and the class. If you can recite the 5 kinds + their arguments, you can read <i>any</i> decorator code — including Nest's source.</span><span data-l="fa"><code>target</code> برای عضوهای Instance همان Prototype است (<code>Feed.prototype</code>) و برای عضوهای Static و خود Class همان Constructor. اگر بتوانی ۵ نوع و Argumentهای هر کدام را از حفظ بگویی، می‌توانی <i>هر</i> کد Decorator را بخوانی — حتی Source خود Nest را.</span></div>
+      <p class="muted"><span data-l="en">Setup note: Nest uses the legacy TypeScript decorator mode, so <code>tsconfig.json</code> needs <code>"experimentalDecorators": true</code> and <code>"emitDecoratorMetadata": true</code>. The Nest CLI scaffold already sets both.</span><span data-l="fa">نکته راه‌اندازی: Nest از حالت قدیمی (Legacy) دکوراتورهای TypeScript استفاده می‌کند، پس <code>tsconfig.json</code> به <code>"experimentalDecorators": true</code> و <code>"emitDecoratorMetadata": true</code> نیاز دارد. Scaffold ‏Nest CLI هر دو را از قبل تنظیم کرده است.</span></p>
+    </section>
 
-  <h2>Decorator factory — a decorator that takes arguments</h2>
-  <p>A plain decorator <i>is</i> the function. A <b>factory</b> is a function that <i>returns</i> that function — that's the only way to pass your own values in.</p>
-  <pre><code>function Logger(prefix: string) {        // 1 · FACTORY — takes YOUR arguments
+    <section id="factory">
+      <h2><span data-l="en">Decorator factory — a decorator that takes arguments</span><span data-l="fa">Factory Decorator — دکوراتوری که Argument می‌گیرد</span></h2>
+      <p><span data-l="en">A plain decorator <i>is</i> the function. A <b>factory</b> is a function that <i>returns</i> that function — that's the only way to pass your own values in.</span><span data-l="fa">دکوراتور ساده <i>خودش</i> همان Function است. <b>Factory</b> تابعی است که آن Function را <i>برمی‌گرداند</i> — و این تنها راه پاس دادن مقدارهای خودت است.</span></p>
+      <pre><code>function Logger(prefix: string) {        // 1 · FACTORY — takes YOUR arguments
   return function (target: Function) {   // 2 · the actual DECORATOR
     console.log(`[${prefix}] ${target.name} was defined`);
   };
@@ -58,34 +74,38 @@ class FeedService {}
 
 // App starts, file is imported → console: [FEED] FeedService was defined
 // new FeedService() ten times  → nothing. It already ran, once.</code></pre>
-  <div class="callout warn"><b>Watch out — the parentheses are the whole difference</b><code>@Logger</code> = the function itself is the decorator (no arguments possible). <code>@Logger('FEED')</code> = call the factory first, use what it returns. Nearly every Nest decorator is a factory: <code>@Controller('feed')</code>, <code>@Get(':id')</code>, and your future <code>@Roles('ADMIN')</code> in the taxi project is just <code>SetMetadata('roles', ...roles)</code> — a factory.</div>
+      <div class="callout warn"><b><span data-l="en">Watch out — the parentheses are the whole difference</span><span data-l="fa">حواست باشد — همه تفاوت در پرانتزهاست</span></b><span data-l="en"><code>@Logger</code> = the function itself is the decorator (no arguments possible). <code>@Logger('FEED')</code> = call the factory first, use what it returns. Nearly every Nest decorator is a factory: <code>@Controller('feed')</code>, <code>@Get(':id')</code>, and your future <code>@Roles('ADMIN')</code> in the taxi project is just <code>SetMetadata('roles', ...roles)</code> — a factory.</span><span data-l="fa"><code>@Logger</code> یعنی خود Function همان Decorator است (امکان پاس دادن Argument نیست). <code>@Logger('FEED')</code> یعنی اول Factory صدا زده می‌شود و خروجی‌اش استفاده می‌شود. تقریباً همه Decoratorهای Nest از نوع Factory هستند: <code>@Controller('feed')</code>، <code>@Get(':id')</code> و <code>@Roles('ADMIN')</code> که در پروژه تاکسی خواهی ساخت فقط <code>SetMetadata('roles', ...roles)</code> است — یک Factory.</span></div>
+    </section>
 
-  <h2>Multiple decorators — why the order looks reversed</h2>
-  <pre><code>@First()
+    <section id="order">
+      <h2><span data-l="en">Multiple decorators — why the order looks reversed</span><span data-l="fa">چند Decorator — چرا ترتیب برعکس به نظر می‌رسد</span></h2>
+      <pre><code>@First()
 @Second()
 @Third()
 class Demo {}</code></pre>
-  <p>Two different phases, two different directions:</p>
-  <table>
-    <tr><th>Phase</th><th>Order</th><th>For the example</th></tr>
-    <tr><td><b>1. Factories are evaluated</b></td><td>Top → bottom</td><td><code>First()</code> → <code>Second()</code> → <code>Third()</code></td></tr>
-    <tr><td><b>2. Decorators are invoked</b></td><td>Bottom → top</td><td><code>Third</code> → <code>Second</code> → <code>First</code></td></tr>
-  </table>
-  <p><b>Why?</b> It's function composition. <code>@f @g x</code> means <code>f(g(x))</code> — the decorator <i>closest</i> to the class has to finish first, so the next one up receives its result and can wrap it. Exactly like an onion, or a stack: the last one you put on is the first one that actually applies.</p>
-  <div class="callout key"><b>Memory line</b><b>Factories read top-down. Decorators run bottom-up.</b> Closest to the class runs first.</div>
-  <p>And inside one whole class, TypeScript applies things in this fixed order:</p>
-  <ol>
-    <li>Parameter, then method / accessor / property decorators — for each <b>instance</b> member</li>
-    <li>Same — for each <b>static</b> member</li>
-    <li>Parameter decorators — for the <b>constructor</b></li>
-    <li>Class decorators — <b>last</b></li>
-  </ol>
+      <p><span data-l="en">Two different phases, two different directions:</span><span data-l="fa">دو فاز متفاوت، دو جهت متفاوت:</span></p>
+      <table>
+        <tr><th><span data-l="en">Phase</span><span data-l="fa">فاز</span></th><th><span data-l="en">Order</span><span data-l="fa">ترتیب</span></th><th><span data-l="en">For the example</span><span data-l="fa">در این مثال</span></th></tr>
+        <tr><td><span data-l="en"><b>1. Factories are evaluated</b></span><span data-l="fa"><b>۱. Factoryها ارزیابی می‌شوند</b></span></td><td><span data-l="en">Top → bottom</span><span data-l="fa">از بالا به پایین</span></td><td><code>First()</code> → <code>Second()</code> → <code>Third()</code></td></tr>
+        <tr><td><span data-l="en"><b>2. Decorators are invoked</b></span><span data-l="fa"><b>۲. Decoratorها اجرا می‌شوند</b></span></td><td><span data-l="en">Bottom → top</span><span data-l="fa">از پایین به بالا</span></td><td><code>Third</code> → <code>Second</code> → <code>First</code></td></tr>
+      </table>
+      <p><span data-l="en"><b>Why?</b> It's function composition. <code>@f @g x</code> means <code>f(g(x))</code> — the decorator <i>closest</i> to the class has to finish first, so the next one up receives its result and can wrap it. Exactly like an onion, or a stack: the last one you put on is the first one that actually applies.</span><span data-l="fa"><b>چرا؟</b> چون ترکیب تابع (Function Composition) است. <code>@f @g x</code> یعنی <code>f(g(x))</code> — دکوراتوری که به Class <i>نزدیک‌تر</i> است باید زودتر تمام شود تا دکوراتور بالایی نتیجه‌اش را بگیرد و دور آن بپیچد. دقیقاً مثل پیاز یا Stack: آخرین چیزی که می‌گذاری، اولین چیزی است که اعمال می‌شود.</span></p>
+      <div class="callout key"><b><span data-l="en">Memory line</span><span data-l="fa">جمله حافظه</span></b><span data-l="en"><b>Factories read top-down. Decorators run bottom-up.</b> Closest to the class runs first.</span><span data-l="fa"><b>Factoryها از بالا به پایین خوانده می‌شوند. Decoratorها از پایین به بالا اجرا می‌شوند.</b> نزدیک‌ترین به Class زودتر اجرا می‌شود.</span></div>
+      <p><span data-l="en">And inside one whole class, TypeScript applies things in this fixed order:</span><span data-l="fa">و داخل یک Class کامل، TypeScript همه چیز را با این ترتیب ثابت اعمال می‌کند:</span></p>
+      <ol>
+        <li><span data-l="en">Parameter, then method / accessor / property decorators — for each <b>instance</b> member</span><span data-l="fa">اول Parameter و بعد Method / Accessor / Property — برای هر عضو <b>Instance</b></span></li>
+        <li><span data-l="en">Same — for each <b>static</b> member</span><span data-l="fa">همان ترتیب — برای هر عضو <b>Static</b></span></li>
+        <li><span data-l="en">Parameter decorators — for the <b>constructor</b></span><span data-l="fa">Parameter Decoratorها — برای <b>Constructor</b></span></li>
+        <li><span data-l="en">Class decorators — <b>last</b></span><span data-l="fa">Class Decoratorها — <b>در آخر</b></span></li>
+      </ol>
+    </section>
 
-  <h2>Examples to memorize — one per kind</h2>
-  <p>Don't memorize all five perfectly today. Memorize <b>example 1 (class + factory)</b> cold, and be able to <i>recognize</i> the shape of the other four.</p>
+    <section id="examples">
+      <h2><span data-l="en">Examples to memorize — one per kind</span><span data-l="fa">مثال‌هایی برای حفظ کردن — برای هر نوع یکی</span></h2>
+      <p><span data-l="en">Don't memorize all five perfectly today. Memorize <b>example 1 (class + factory)</b> cold, and be able to <i>recognize</i> the shape of the other four.</span><span data-l="fa">لازم نیست امروز هر پنج تا را کامل حفظ کنی. <b>مثال ۱ (Class + Factory)</b> را کاملاً حفظ کن و شکل چهار تای دیگر را بتوانی <i>تشخیص بدهی</i>.</span></p>
 
-  <h3>1 · Class decorator (factory) — tag a class</h3>
-  <pre><code>function Tag(label: string) {
+      <h3><span data-l="en">1 · Class decorator (factory) — tag a class</span><span data-l="fa">۱ · Class Decorator از نوع Factory — برچسب زدن به Class</span></h3>
+      <pre><code>function Tag(label: string) {
   return function (target: Function) {
     (target as any).label = label;   // leave something on the class itself
   };
@@ -96,8 +116,8 @@ class FeedService {}
 
 console.log((FeedService as any).label);  // 'feed-service' — set at definition time</code></pre>
 
-  <h3>2 · Method decorator — wrap a method (timing)</h3>
-  <pre><code>function LogTime(target: any, key: string, descriptor: PropertyDescriptor) {
+      <h3><span data-l="en">2 · Method decorator — wrap a method (timing)</span><span data-l="fa">۲ · Method Decorator — پیچیدن دور Method (زمان‌سنجی)</span></h3>
+      <pre><code>function LogTime(target: any, key: string, descriptor: PropertyDescriptor) {
   const original = descriptor.value;
   descriptor.value = async function (...args: any[]) {
     const start = Date.now();
@@ -112,10 +132,12 @@ class FeedService {
   @LogTime
   async getFeed() { /* ... */ }   // decorator runs at definition; the WRAPPER runs per call
 }</code></pre>
-  <div class="example"><b class="t">See the split again</b><p style="margin:6px 0 0"><code>@LogTime</code> itself ran once, at startup, and swapped in a wrapper. The wrapper is what runs on every <code>getFeed()</code> call. That two-step — <i>decorate once, effect per use</i> — is how almost all powerful decorators work.</p></div>
+      <div class="example"><b class="t"><span data-l="en">See the split again</span><span data-l="fa">تفکیک را دوباره ببین</span></b>
+        <p style="margin:6px 0 0"><span data-l="en"><code>@LogTime</code> itself ran once, at startup, and swapped in a wrapper. The wrapper is what runs on every <code>getFeed()</code> call. That two-step — <i>decorate once, effect per use</i> — is how almost all powerful decorators work.</span><span data-l="fa">خود <code>@LogTime</code> یک بار، موقع Startup اجرا شد و یک Wrapper جایگزین کرد. این Wrapper است که با هر بار صدا زدن <code>getFeed()</code> اجرا می‌شود. همین دو قدم — <i>یک بار Decorate کن، در هر استفاده اثر بگذار</i> — روش کار تقریباً همه دکوراتورهای قدرتمند است.</span></p>
+      </div>
 
-  <h3>3 · Property decorator — metadata only</h3>
-  <pre><code>function Required(target: any, key: string) {
+      <h3><span data-l="en">3 · Property decorator — metadata only</span><span data-l="fa">۳ · Property Decorator — فقط Metadata</span></h3>
+      <pre><code>function Required(target: any, key: string) {
   const fields: string[] = Reflect.getMetadata('required', target) ?? [];
   Reflect.defineMetadata('required', [...fields, key], target);
 }
@@ -125,18 +147,18 @@ class CreateTripDto {
   pickup!: string;   // no descriptor exists for properties — metadata is all you get
 }</code></pre>
 
-  <h3>4 · Parameter decorator — mark an argument</h3>
-  <pre><code>function LogParam(target: any, key: string | undefined, index: number) {
+      <h3><span data-l="en">4 · Parameter decorator — mark an argument</span><span data-l="fa">۴ · Parameter Decorator — علامت زدن یک Argument</span></h3>
+      <pre><code>function LogParam(target: any, key: string | undefined, index: number) {
   console.log(`Parameter #${index} of ${String(key ?? 'constructor')} is decorated`);
 }
 
 class TripsController {
   create(@LogParam dto: object) {}   // prints at definition time: Parameter #0 of create…
 }</code></pre>
-  <p class="muted">This is the family Nest's <code>createParamDecorator()</code> builds on — your <code>@CurrentUser()</code> in the taxi project will be one of these, except Nest gives it a factory that also runs per request to extract the value.</p>
+      <p class="muted"><span data-l="en">This is the family Nest's <code>createParamDecorator()</code> builds on — your <code>@CurrentUser()</code> in the taxi project will be one of these, except Nest gives it a factory that also runs per request to extract the value.</span><span data-l="fa">این همان خانواده‌ای است که <code>createParamDecorator()</code> در Nest رویش ساخته شده — <code>@CurrentUser()</code> تو در پروژه تاکسی یکی از همین‌ها خواهد بود، با این تفاوت که Nest به آن یک Factory می‌دهد که برای هر Request هم اجرا می‌شود تا مقدار را استخراج کند.</span></p>
 
-  <h3>5 · Accessor decorator — guard a setter</h3>
-  <pre><code>function Positive(target: any, key: string, descriptor: PropertyDescriptor) {
+      <h3><span data-l="en">5 · Accessor decorator — guard a setter</span><span data-l="fa">۵ · Accessor Decorator — محافظت از Setter</span></h3>
+      <pre><code>function Positive(target: any, key: string, descriptor: PropertyDescriptor) {
   const originalSet = descriptor.set!;
   descriptor.set = function (value: number) {
     if (value &lt; 0) throw new Error(`${key} cannot be negative`);
@@ -148,12 +170,14 @@ class Wallet {
   @Positive
   set balance(value: number) { /* store it */ }
 }</code></pre>
+    </section>
 
-  <h2>Train on these</h2>
-  <p>Cover the answers, say the output out loud, then check. Predicting output is the fastest way to make the order stick.</p>
+    <section id="training">
+      <h2><span data-l="en">Train on these</span><span data-l="fa">با این‌ها تمرین کن</span></h2>
+      <p><span data-l="en">Cover the answers, say the output out loud, then check. Predicting output is the fastest way to make the order stick.</span><span data-l="fa">جواب‌ها را بپوشان، خروجی را با صدای بلند بگو، بعد چک کن. حدس زدن خروجی سریع‌ترین راه جا افتادن ترتیب اجراست.</span></p>
 
-  <div class="quiz"><b>Drill 1 — predict the output</b>
-    <pre><code>function deco(name: string) {
+      <div class="quiz"><b><span data-l="en">Drill 1 — predict the output</span><span data-l="fa">تمرین ۱ — خروجی را حدس بزن</span></b>
+        <pre><code>function deco(name: string) {
   console.log(`factory ${name}`);
   return function () { console.log(`decorator ${name}`); };
 }
@@ -164,41 +188,48 @@ class Demo {}
 
 new Demo();
 new Demo();</code></pre>
-    <details><summary><b>Answer</b></summary><p><code>factory A → factory B → decorator B → decorator A</code> — and then nothing for the two <code>new Demo()</code> calls. Factories top-down, decorators bottom-up, all of it once at definition time.</p></details>
-  </div>
+        <details><summary><span data-l="en">Answer</span><span data-l="fa">جواب</span></summary><p><span data-l="en"><code>factory A → factory B → decorator B → decorator A</code> — and then nothing for the two <code>new Demo()</code> calls. Factories top-down, decorators bottom-up, all of it once at definition time.</span><span data-l="fa"><code>factory A → factory B → decorator B → decorator A</code> — و بعد برای دو تا <code>new Demo()</code> هیچ اتفاقی نمی‌افتد. Factoryها از بالا به پایین، Decoratorها از پایین به بالا، همه فقط یک بار در زمان تعریف.</span></p></details>
+      </div>
 
-  <div class="quiz"><b>Drill 2 — spot the bug</b>
-    <p> A teammate writes a decorator that opens a database connection inside the decorator function "so it's ready before any request." What's wrong?</p>
-    <details><summary><b>Answer</b></summary><p>The decorator runs at class-definition / module-load time — before Nest has built the app, read config, or connected its own providers. Decorators should be cheap: store metadata or wrap a method. Real connections belong in a provider's lifecycle hook (e.g. <code>onModuleInit</code> — Chapter 2).</p></details>
-  </div>
+      <div class="quiz"><b><span data-l="en">Drill 2 — spot the bug</span><span data-l="fa">تمرین ۲ — باگ را پیدا کن</span></b>
+        <p><span data-l="en">A teammate writes a decorator that opens a database connection inside the decorator function "so it's ready before any request." What's wrong?</span><span data-l="fa">یکی از هم‌تیمی‌ها دکوراتوری می‌نویسد که داخل خود تابع دکوراتور یک Connection به دیتابیس باز می‌کند «تا قبل از هر Request آماده باشد». مشکلش چیست؟</span></p>
+        <details><summary><span data-l="en">Answer</span><span data-l="fa">جواب</span></summary><p><span data-l="en">The decorator runs at class-definition / module-load time — before Nest has built the app, read config, or connected its own providers. Decorators should be cheap: store metadata or wrap a method. Real connections belong in a provider's lifecycle hook (e.g. <code>onModuleInit</code> — Chapter 2).</span><span data-l="fa">دکوراتور در زمان تعریف Class / Load شدن Module اجرا می‌شود — قبل از اینکه Nest برنامه را بسازد، Config را بخواند یا Providerهای خودش وصل شوند. دکوراتور باید سبک باشد: Metadata ذخیره کن یا یک Method را Wrap کن. Connectionهای واقعی جای‌شان در Lifecycle Hook یک Provider است (مثلاً <code>onModuleInit</code> — فصل ۲).</span></p></details>
+      </div>
 
-  <div class="quiz"><b>Drill 3 — write from memory (no peeking up)</b>
-    <ol>
-      <li>Write the skeleton of a class-decorator <b>factory</b> called <code>@Entity(tableName)</code> that stores the table name as metadata on the class.</li>
-      <li>Write <code>@Sealed</code> (no factory) that does <code>Object.seal(target)</code> and <code>Object.seal(target.prototype)</code>.</li>
-      <li>List the 5 decorator kinds and the arguments each receives — from memory.</li>
-    </ol>
-    <details><summary><b>Check Drill 3.1</b></summary><pre><code>function Entity(tableName: string) {
+      <div class="quiz"><b><span data-l="en">Drill 3 — write from memory (no peeking up)</span><span data-l="fa">تمرین ۳ — از حفظ بنویس (بدون نگاه کردن به بالا)</span></b>
+        <ol>
+          <li><span data-l="en">Write the skeleton of a class-decorator <b>factory</b> called <code>@Entity(tableName)</code> that stores the table name as metadata on the class.</span><span data-l="fa">اسکلت یک <b>Factory</b> برای Class Decorator به اسم <code>@Entity(tableName)</code> بنویس که اسم Table را به‌صورت Metadata روی Class ذخیره کند.</span></li>
+          <li><span data-l="en">Write <code>@Sealed</code> (no factory) that does <code>Object.seal(target)</code> and <code>Object.seal(target.prototype)</code>.</span><span data-l="fa"><code>@Sealed</code> را بنویس (بدون Factory) که <code>Object.seal(target)</code> و <code>Object.seal(target.prototype)</code> را انجام بدهد.</span></li>
+          <li><span data-l="en">List the 5 decorator kinds and the arguments each receives — from memory.</span><span data-l="fa">۵ نوع Decorator و Argumentهای هر کدام را از حفظ بنویس.</span></li>
+        </ol>
+        <details><summary><span data-l="en">Check Drill 3.1</span><span data-l="fa">بررسی تمرین ۳٫۱</span></summary><pre><code>function Entity(tableName: string) {
   return function (target: Function) {
     Reflect.defineMetadata('table', tableName, target);
   };
-}</code></pre><p>3.2 is two lines inside a plain function taking <code>target: Function</code>. For 3.3, compare with the table above.</p></details>
-  </div>
+}</code></pre><p><span data-l="en">3.2 is two lines inside a plain function taking <code>target: Function</code>. For 3.3, compare with the table above.</span><span data-l="fa">تمرین ۳٫۲ فقط دو خط داخل یک تابع ساده است که <code>target: Function</code> می‌گیرد. برای ۳٫۳ با جدول بالا مقایسه کن.</span></p></details>
+      </div>
+    </section>
 
-  <h2>Where this lands in Nest / the taxi project</h2>
-  <div class="callout link"><b>Taxi / InShop connection</b>Everything you annotate for the next month is a decorator from this page: <code>@Module</code> wires the app, <code>@Controller</code> + <code>@Get</code> define routes, <code>@Injectable</code> marks providers, <code>@Roles</code> / <code>@CurrentUser</code> (Ch 4) are custom factories you will write yourself. In InShop, the same mechanism is how your Guards, throttler and interceptors attach to the feed routes — all decided from metadata written at definition time.</div>
+    <section id="nest">
+      <h2><span data-l="en">Where this lands in Nest / the taxi project</span><span data-l="fa">این کجای Nest و پروژه تاکسی استفاده می‌شود</span></h2>
+      <div class="callout link"><b><span data-l="en">Taxi / InShop connection</span><span data-l="fa">ارتباط با تاکسی / InShop</span></b><span data-l="en">Everything you annotate for the next month is a decorator from this page: <code>@Module</code> wires the app, <code>@Controller</code> + <code>@Get</code> define routes, <code>@Injectable</code> marks providers, <code>@Roles</code> / <code>@CurrentUser</code> (Ch 4) are custom factories you will write yourself. In InShop, the same mechanism is how your Guards, throttler and interceptors attach to the feed routes — all decided from metadata written at definition time.</span><span data-l="fa">هر چیزی که ماه آینده Annotate می‌کنی یک Decorator از همین صفحه است: <code>@Module</code> برنامه را به هم وصل می‌کند، <code>@Controller</code> و <code>@Get</code> ‏Routeها را تعریف می‌کنند، <code>@Injectable</code> ‏Providerها را علامت می‌زند و <code>@Roles</code> / <code>@CurrentUser</code> (فصل ۴) ‏Factoryهای سفارشی‌ای هستند که خودت خواهی نوشت. در InShop هم همین مکانیزم است که Guardها، Throttler و Interceptorها را به Routeهای Feed وصل می‌کند — همه از روی Metadataای که در زمان تعریف نوشته شده تصمیم گرفته می‌شود.</span></div>
+    </section>
 
-  <div class="quiz"><b>Review questions — answer without looking up</b>
-    <ol>
-      <li>When exactly does <code>@Logger()</code> on <code>class FeedService</code> run — and when does it <i>not</i> run?</li>
-      <li>Name the 5 decorator kinds and what each one receives.</li>
-      <li>What is the difference between <code>@Logger</code> and <code>@Logger('FEED')</code>?</li>
-      <li><code>@A() @B() @C() class X {}</code> — in what order do the factories evaluate, and in what order do the decorators run? Why?</li>
-      <li>A Nest decorator like <code>@Get(':id')</code> runs at definition time — so how does anything happen at request time?</li>
-    </ol>
-  </div>
+    <section id="review">
+      <div class="quiz"><b><span data-l="en">Review questions — answer without looking up</span><span data-l="fa">سوال‌های مرور — بدون نگاه کردن جواب بده</span></b>
+        <ol>
+          <li><span data-l="en">When exactly does <code>@Logger()</code> on <code>class FeedService</code> run — and when does it <i>not</i> run?</span><span data-l="fa"><code>@Logger()</code> روی <code>class FeedService</code> دقیقاً کی اجرا می‌شود — و کی اجرا <i>نمی‌شود</i>؟</span></li>
+          <li><span data-l="en">Name the 5 decorator kinds and what each one receives.</span><span data-l="fa">۵ نوع Decorator و چیزی که هر کدام دریافت می‌کند را نام ببر.</span></li>
+          <li><span data-l="en">What is the difference between <code>@Logger</code> and <code>@Logger('FEED')</code>?</span><span data-l="fa">تفاوت <code>@Logger</code> و <code>@Logger('FEED')</code> چیست؟</span></li>
+          <li><span data-l="en"><code>@A() @B() @C() class X {}</code> — in what order do the factories evaluate, and in what order do the decorators run? Why?</span><span data-l="fa">در <code>@A() @B() @C() class X {}</code> ‏Factoryها با چه ترتیبی ارزیابی می‌شوند و Decoratorها با چه ترتیبی اجرا می‌شوند؟ چرا؟</span></li>
+          <li><span data-l="en">A Nest decorator like <code>@Get(':id')</code> runs at definition time — so how does anything happen at request time?</span><span data-l="fa">دکوراتور Nest مثل <code>@Get(':id')</code> در زمان تعریف اجرا می‌شود — پس در زمان Request چطور اتفاقی می‌افتد؟</span></li>
+        </ol>
+      </div>
+    </section>
 
-  <footer><a class="back" href="../index.html">← Back to all notes</a> · Session 1 · 8 Nov 2026 · Raw note: <code>notes/decorators.md</code></footer>
-</main>
+    <footer><a class="back" href="../index.html"><span data-l="en">← Back to all notes</span><span data-l="fa">→ برگشت به همه یادداشت‌ها</span></a> · <span data-l="en">Session 1 · 8 Nov 2026 · Raw note:</span><span data-l="fa">جلسه ۱ · ۸ نوامبر ۲۰۲۶ · یادداشت خام:</span> <code>notes/decorators.md</code></footer>
+  </main>
+</div>
+<script src="../assets/site.js"></script>
 </body>
 </html>
