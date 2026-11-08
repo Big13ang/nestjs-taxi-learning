@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Dependency Injection and Modules — NestJS Notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Vazirmatn:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+<script>try{var l=localStorage.getItem("nestjs-notes-lang");if(l==="fa"){document.documentElement.lang="fa";document.documentElement.dir="rtl";}}catch(e){}</script>
+</head>
+<body data-root="../" data-page="di">
+<div class="book">
+  <nav class="toc" aria-label="Book contents"></nav>
+  <main>
+    <header class="page-head">
+      <div>
+        <a class="back" href="../index.html"><span data-l="en">← All notes</span><span data-l="fa">→ همه یادداشت‌ها</span></a>
+        <div class="kicker" style="margin-top:14px"><span data-l="en">Chapter 1, Modules and Providers</span><span data-l="fa">فصل ۱، Moduleها و Providerها</span></div>
+        <h1><span data-l="en">Dependency injection: ask, and Nest brings it</span><span data-l="fa">تزریق وابستگی: تو بگو، Nest می‌آورد</span></h1>
+        <p class="sub"><span data-l="en">How a service gets into your controller, and how one module can use another module's service. The simplest version that is still true.</span><span data-l="fa">اینکه یک Service چطور به دست Controller تو می‌رسد و یک Module چطور می‌تواند از Service ماژول دیگر استفاده کند. ساده‌ترین نسخه‌ای که هنوز درست است.</span></p>
+        <p class="meta"><span data-l="en">Chapter 1, a 10 minute read</span><span data-l="fa">فصل ۱، ۱۰ دقیقه مطالعه</span></p>
+      </div>
+      <button class="btn" type="button" id="lang-toggle">فارسی</button>
+    </header>
+
+    <div class="focus">
+      <p class="focus-label"><span data-l="en">The one rule of this page</span><span data-l="fa">قانون اصلی این صفحه</span></p>
+      <p class="rule"><span data-l="en">You never write <code>new</code>. You ask in the constructor, and Nest brings it.</span><span data-l="fa">تو هیچ‌وقت <code>new</code> نمی‌نویسی. در Constructor می‌خواهی، و Nest آن را می‌آورد.</span></p>
+    </div>
+
+    <section id="idea">
+      <h2><span data-l="en">The idea, in one picture</span><span data-l="fa">ایده، در یک تصویر</span></h2>
+      <p><span data-l="en">Think of Nest as a front desk. Services are the workers. Your controller does not hire a worker itself — it walks to the front desk and says "I need the drivers worker." The desk already hired that worker this morning (at startup), and sends the same one over.</span><span data-l="fa">Nest را مثل یک پذیرش (Front Desk) تصور کن. Serviceها کارمندها هستند. Controller تو خودش کارمند استخدام نمی‌کند — می‌رود پیش پذیرش و می‌گوید «کارمند راننده‌ها را می‌خواهم». پذیرش آن کارمند را همان صبح (موقع Startup) استخدام کرده و همان یک نفر را می‌فرستد.</span></p>
+      <p><span data-l="en">That is all dependency injection is: <b>you declare what you need, someone else builds it and hands it to you.</b> The "someone else" is Nest. Your only job is to ask in the right place: the constructor.</span><span data-l="fa">تزریق وابستگی (Dependency Injection) فقط همین است: <b>تو اعلام می‌کنی چه می‌خواهی، یک نفر دیگر آن را می‌سازد و به دستت می‌دهد.</b> آن «نفر دیگر» Nest است. تنها کار تو این است که در جای درست بخواهی: در Constructor.</span></p>
+      <pre><code>// What you do NOT write anymore:
+const service = new DriversService();   // ← you building it yourself
+
+// What you write instead — you only ask:
+constructor(private drivers: DriversService) {}
+//            ↑ Nest reads this and brings the service in</code></pre>
+    </section>
+
+    <section id="recipe">
+      <h2><span data-l="en">Using a service in the same module: three moves</span><span data-l="fa">استفاده از یک Service در همان Module: سه حرکت</span></h2>
+      <ol>
+        <li><span data-l="en"><b>Mark the worker.</b> Put <code>@Injectable()</code> on the service. It tells Nest: "you manage this class, and it may receive things too."</span><span data-l="fa"><b>کارمند را علامت بزن.</b> روی Service ‏<code>@Injectable()</code> بگذار. به Nest می‌گوید: «مدیریت این Class با توست و خودش هم می‌تواند چیزهایی دریافت کند.»</span></li>
+        <li><span data-l="en"><b>Register it.</b> List the service in its module's <code>providers</code>. This is the hiring list the front desk works from. Not on the list = the desk has never heard of it.</span><span data-l="fa"><b>ثبتش کن.</b> Service را در <code>providers</code> ماژولش بنویس. این لیست استخدامی است که پذیرش از رویش کار می‌کند. در لیست نباشد یعنی پذیرش اصلاً اسمش را نشنیده است.</span></li>
+        <li><span data-l="en"><b>Ask.</b> Write it in the constructor of whoever needs it. Done — Nest injects it when the app starts.</span><span data-l="fa"><b>بخواه.</b> آن را در Constructor هر کسی که لازمش دارد بنویس. تمام — Nest موقع بالا آمدن برنامه آن را تزریق می‌کند.</span></li>
+      </ol>
+      <pre><code>// 1 · the service
+@Injectable()
+export class DriversService {
+  findOne(id: number) { return `driver ${id}`; }
+}
+
+// 2 · its module — the hiring list
+@Module({
+  providers: [DriversService],
+  exports: [DriversService],   // ← next section explains this line
+})
+export class DriversModule {}
+
+// 3 · a controller in the SAME module asks
+@Controller('drivers')
+export class DriversController {
+  constructor(private drivers: DriversService) {}
+
+  @Get(':id')
+  one(@Param('id') id: string) { return this.drivers.findOne(+id); }
+}</code></pre>
+      <div class="callout tip"><b><span data-l="en">One instance for everyone</span><span data-l="fa">یک نمونه برای همه</span></b><span data-l="en">By default Nest builds each service <b>once</b> (a singleton) and hands that same instance to everyone who asks. Ten controllers asking for <code>DriversService</code> all share the one worker — which is why services are the right home for shared state and shared logic.</span><span data-l="fa">Nest به‌صورت پیش‌فرض هر Service را فقط <b>یک بار</b> می‌سازد (Singleton) و همان یک نمونه را به هر کسی که بخواهد می‌دهد. ده Controller که <code>DriversService</code> می‌خواهند همه از همان یک کارمند استفاده می‌کنند — برای همین Service جای درست State و منطق مشترک است.</span></div>
+    </section>
+
+    <section id="other-modules">
+      <h2><span data-l="en">Using a service from another module: three more moves</span><span data-l="fa">استفاده از Service یک Module دیگر: سه حرکت دیگر</span></h2>
+      <p><span data-l="en">A service is <b>private to its module</b> by default. The trips team cannot just grab the drivers worker — the drivers department has to allow it, and the trips department has to open the door. Picture a module as a department:</span><span data-l="fa">یک Service به‌صورت پیش‌فرض <b>خصوصیِ Module خودش</b> است. تیم سفرها نمی‌تواند همین‌طوری کارمند راننده‌ها را بردارد — دپارتمان راننده‌ها باید اجازه بدهد و دپارتمان سفرها باید در را باز کند. Module را مثل یک دپارتمان تصور کن:</span></p>
+      <table>
+        <tr><th><span data-l="en">In the module</span><span data-l="fa">در Module</span></th><th><span data-l="en">In the department</span><span data-l="fa">در دپارتمان</span></th></tr>
+        <tr><td><code>providers</code></td><td><span data-l="en">the staff who work here</span><span data-l="fa">کارمندهایی که اینجا کار می‌کنند</span></td></tr>
+        <tr><td><code>exports</code></td><td><span data-l="en">the staff allowed to help other departments</span><span data-l="fa">کارمندهایی که اجازه دارند به دپارتمان‌های دیگر کمک کنند</span></td></tr>
+        <tr><td><code>imports</code></td><td><span data-l="en">the doors you open to other departments</span><span data-l="fa">درهایی که به دپارتمان‌های دیگر باز می‌کنی</span></td></tr>
+      </table>
+      <pre><code>// DriversModule (already written above) has this line:
+//   exports: [DriversService]        ← MOVE 1: drivers allow sharing
+
+// MOVE 2: trips open the door
+@Module({
+  imports: [DriversModule],
+  providers: [TripsService],
+  controllers: [TripsController],
+})
+export class TripsModule {}
+
+// MOVE 3: trips ask, exactly like before
+@Injectable()
+export class TripsService {
+  constructor(private drivers: DriversService) {}
+
+  createTrip(driverId: number) {
+    const driver = this.drivers.findOne(driverId);
+    return `trip with ${driver}`;
+  }
+}</code></pre>
+      <div class="callout key"><b><span data-l="en">Say it as a sentence</span><span data-l="fa">به‌صورت جمله بگو</span></b><span data-l="en">"Drivers <b>export</b> their service, Trips <b>import</b> the Drivers module, and then anyone in Trips can <b>inject</b> it." If you can say that sentence, you can wire any two modules in Nest.</span><span data-l="fa">«راننده‌ها Service خود را <b>Export</b> می‌کنند، سفرها Module راننده‌ها را <b>Import</b> می‌کنند، و بعد هر کسی در سفرها می‌تواند آن را <b>Inject</b> کند.» اگر این جمله را بتوانی بگویی، هر دو Module در Nest را می‌توانی به هم وصل کنی.</span></div>
+      <p class="muted"><span data-l="en">One exception you will meet soon: a module marked <code>@Global()</code> — its exports are available everywhere without importing. Rare on purpose; the config module is the usual case. Do not make your own modules global to save typing.</span><span data-l="fa">یک استثنا که به‌زودی می‌بینی: ماژولی با <code>@Global()</code> — خروجی‌هایش بدون Import در همه جا در دسترس است. عمداً نادر است؛ Module کانفیگ مورد معمول آن است. برای تنبلی در تایپ کردن، Moduleهای خودت را Global نکن.</span></p>
+    </section>
+
+    <section id="errors">
+      <h2><span data-l="en">The one error you will see, translated</span><span data-l="fa">آن یک خطایی که خواهی دید، ترجمه‌شده</span></h2>
+      <pre><code>Nest can't resolve dependencies of the TripsService (?).
+Please make sure that the argument DriversService at index [0]
+is available in the TripsModule context.</code></pre>
+      <p><span data-l="en">Plain English: "TripsService asked for DriversService in its constructor, and I could not find it from TripsModule." Run this checklist from the top — it is one of these four, almost every time:</span><span data-l="fa">به زبان ساده: «TripsService در Constructor خود DriversService را خواست و من نتوانستم آن را از TripsModule پیدا کنم.» این چک‌لیست را از بالا اجرا کن — تقریباً همیشه یکی از همین چهار تاست:</span></p>
+      <ol>
+        <li><span data-l="en">Does the service have <code>@Injectable()</code>?</span><span data-l="fa">آیا Service ‏<code>@Injectable()</code> دارد؟</span></li>
+        <li><span data-l="en">Is it in the <code>providers</code> of its module?</span><span data-l="fa">آیا در <code>providers</code> ماژول خودش هست؟</span></li>
+        <li><span data-l="en">Is it in that module's <code>exports</code>?</span><span data-l="fa">آیا در <code>exports</code> آن ماژول هست؟</span></li>
+        <li><span data-l="en">Did the needing module <code>imports</code> that module?</span><span data-l="fa">آیا ماژولی که لازمش دارد آن Module را <code>imports</code> کرده است؟</span></li>
+      </ol>
+    </section>
+
+    <section id="training">
+      <h2><span data-l="en">Train on these</span><span data-l="fa">با این‌ها تمرین کن</span></h2>
+      <div class="quiz"><b><span data-l="en">Drill 1 — what is missing?</span><span data-l="fa">تمرین ۱ — چه چیزی کم است؟</span></b>
+        <p><span data-l="en"><code>PaymentsModule</code> lists <code>PaymentsService</code> in its providers but not in its exports. <code>TripsModule</code> imports <code>PaymentsModule</code>, and <code>TripsService</code> asks for <code>PaymentsService</code> in its constructor. What happens, and what is the one-line fix?</span><span data-l="fa"><code>PaymentsModule</code> ‏<code>PaymentsService</code> را در Providers دارد ولی در Exports ندارد. <code>TripsModule</code> ‏<code>PaymentsModule</code> را Import می‌کند و <code>TripsService</code> در Constructor خود <code>PaymentsService</code> را می‌خواهد. چه اتفاقی می‌افتد و راه‌حل یک‌خطی چیست؟</span></p>
+        <details><summary><span data-l="en">Answer</span><span data-l="fa">جواب</span></summary><p><span data-l="en">Startup fails with "can't resolve dependencies of the TripsService" — importing the module is not enough while the service stays private. Fix: add <code>PaymentsService</code> to <code>exports</code> in <code>PaymentsModule</code>.</span><span data-l="fa">برنامه با خطای «can't resolve dependencies of the TripsService» بالا نمی‌آید — تا وقتی Service خصوصی بماند، Import کردن Module کافی نیست. راه‌حل: <code>PaymentsService</code> را به <code>exports</code> در <code>PaymentsModule</code> اضافه کن.</span></p></details>
+      </div>
+      <div class="quiz"><b><span data-l="en">Drill 2 — write from memory</span><span data-l="fa">تمرین ۲ — از حفظ بنویس</span></b>
+        <p><span data-l="en">A new <code>FaresService</code> lives in <code>FaresModule</code>. <code>TripsService</code> (in <code>TripsModule</code>) needs it. Write the three changes, from memory, in order.</span><span data-l="fa">یک <code>FaresService</code> جدید در <code>FaresModule</code> زندگی می‌کند. <code>TripsService</code> (در <code>TripsModule</code>) به آن نیاز دارد. هر سه تغییر را از حفظ و به ترتیب بنویس.</span></p>
+        <details><summary><span data-l="en">Answer</span><span data-l="fa">جواب</span></summary><p><span data-l="en">1) <code>FaresModule</code>: add <code>FaresService</code> to <code>exports</code>. 2) <code>TripsModule</code>: add <code>FaresModule</code> to <code>imports</code>. 3) <code>TripsService</code>: <code>constructor(private fares: FaresService) {}</code>.</span><span data-l="fa">۱) در <code>FaresModule</code>: ‏<code>FaresService</code> را به <code>exports</code> اضافه کن. ۲) در <code>TripsModule</code>: ‏<code>FaresModule</code> را به <code>imports</code> اضافه کن. ۳) در <code>TripsService</code>: بنویس <code>constructor(private fares: FaresService) {}</code>.</span></p></details>
+      </div>
+    </section>
+
+    <section id="review">
+      <div class="quiz"><b><span data-l="en">Review questions — answer without looking up</span><span data-l="fa">سوال‌های مرور — بدون نگاه کردن جواب بده</span></b>
+        <ol>
+          <li><span data-l="en">Who writes <code>new DriversService()</code> in a Nest app?</span><span data-l="fa">در یک برنامه Nest چه کسی <code>new DriversService()</code> را می‌نویسد؟</span></li>
+          <li><span data-l="en">What are the three moves to use a service inside its own module?</span><span data-l="fa">سه حرکت برای استفاده از یک Service در Module خودش چیست؟</span></li>
+          <li><span data-l="en">Say the sharing sentence: exports, imports, inject — who does which?</span><span data-l="fa">جمله اشتراک‌گذاری را بگو: Exports، Imports، Inject — هر کدام کار کیست؟</span></li>
+          <li><span data-l="en">Why do all controllers share one service instance, and when is that a problem?</span><span data-l="fa">چرا همه Controllerها یک نمونه Service را شریک می‌شوند و این کی به مشکل تبدیل می‌شود؟</span></li>
+        </ol>
+      </div>
+      <div class="callout link"><b><span data-l="en">Taxi / InShop connection</span><span data-l="fa">ارتباط با تاکسی / InShop</span></b><span data-l="en">The whole taxi project is this page repeated: the Auth service will be exported once and injected into Drivers, Passengers and Trips. InShop's backend works the same way — when you hit the "can't resolve dependencies" error there, it will be one of the four checklist items above.</span><span data-l="fa">کل پروژه تاکسی تکرار همین صفحه است: Service احراز هویت یک بار Export می‌شود و به Drivers، Passengers و Trips تزریق می‌شود. Backend این‌شاپ هم همین‌طور کار می‌کند — وقتی آنجا به خطای «can't resolve dependencies» خوردی، یکی از همان چهار مورد چک‌لیست بالاست.</span></div>
+    </section>
+
+    <footer><a class="back" href="../index.html"><span data-l="en">← Back to all notes</span><span data-l="fa">→ برگشت به همه یادداشت‌ها</span></a> · <span data-l="en">Chapter 1 · Raw note:</span><span data-l="fa">فصل ۱ · یادداشت خام:</span> <code>notes/dependency-injection.md</code></footer>
+  </main>
+</div>
+<script src="../assets/site.js"></script>
+</body>
+</html>
